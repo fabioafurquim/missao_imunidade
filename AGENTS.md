@@ -8,25 +8,32 @@ O jogo deve ensinar raciocínio clínico, microbiologia, epidemiologia e saúde 
 
 ## Escopo entregue
 
-A primeira versão implementa a **Missão 01**, um cenário fictício de cólera no Sudeste Asiático.
+A primeira versão navegável implementa cinco dossiês clínico-epidemiológicos fictícios. Os diagnósticos reais são cólera, dengue, sarampo, tuberculose pulmonar e *Candida auris*, mas isso é informação de autoria: não exiba o agente em cards, títulos de missão, briefing ou antes de uma defesa diagnóstica correta.
 
-- Há quatro especialistas: cientista, médico, especialista de campo e comunicação;
-- O jogador possui três ações por dia;
-- As ações revelam pistas clínica, epidemiológica, laboratorial e preventiva;
+- Há quatro médicos: emergência, infectologia, epidemiologia médica e patologia clínica;
+- O jogador possui três ações por dia; cada médico entrega duas camadas de evidência, totalizando oito por caso;
+- As ações revelam evidências clínica, de exposição, de vigilância e laboratoriais, em progressão;
 - O surto cresce ao encerrar o dia e cresce menos após ação preventiva;
 - É possível propor diagnóstico antes de obter todas as pistas; um erro consome um dia;
 - O diagnóstico correto libera a etapa de contenção;
 - A missão tem medidas de água segura, atendimento, comunicação e vigilância;
-- A vitória exige ao menos três medidas, incluindo água segura e organização do atendimento;
-- Há telas de vitória, derrota, reinício e score.
+- Cada fase possui quatro medidas contextualizadas; a vitória exige ao menos três, incluindo duas medidas essenciais;
+- Há telas de vitória, derrota, reinício, score, debriefing, aprendizados e referência oficial;
+- O mapa de missões libera a fase seguinte após a conclusão da anterior; há um modo de teste para explorar todas as fases;
+- O progresso é somente local em memória e é perdido ao recarregar a página.
 
-O conteúdo de cólera usa como referência a ficha da Organização Mundial da Saúde: transmissão por água/alimentos contaminados, diarreia aquosa aguda, risco de desidratação, acesso rápido ao tratamento e medidas WASH (água, saneamento e higiene). Antes de incluir ou revisar conteúdo médico, use fontes oficiais/primárias e trate o jogo como educacional, não como orientação clínica individual.
+Antes da campanha, o aluno informa nome, semestre e eixo de estudo. Esses dados ficam em `localStorage` apenas no navegador e personalizam a saudação e o foco exibido; não são enviados a servidor. Não transforme esta etapa em cadastro, autenticação ou coleta de dados sensíveis sem uma decisão explícita de produto e privacidade.
+
+O tutorial é apresentado no primeiro acesso e pode ser reaberto pelo botão **Como jogar**. Ele explica o fluxo dossiê → equipe médica → defesa da hipótese; preserve esse suporte enquanto o jogo tiver mecânicas por descoberta. A tela de campanha tem mapa-múndi com marcadores em `mapPosition` de cada missão: hover, foco por teclado e toque no card devem atualizar local e marcador. O asset é `src/assets/mapa-mundi-interativo-3d.png`.
+
+Os cenários usam sínteses de fontes oficiais: OMS para cólera, dengue, sarampo e tuberculose; CDC para *Candida auris*. Antes de incluir ou revisar conteúdo médico, use fontes oficiais/primárias, mantenha o link da fonte em cada missão e trate o jogo como educacional, não como orientação clínica individual.
 
 ## Tecnologia e estrutura
 
 - Frontend: React 18, Vite 5 e TypeScript;
 - Estilos: CSS próprio em `src/styles.css`;
-- Lógica e dados atuais: `src/main.tsx`;
+- Interface e lógica de campanha: `src/main.tsx`;
+- Dados clínico-pedagógicos das missões: `src/data/missions.ts`;
 - Asset principal: `src/assets/globo-sudeste-asiatico-3d.png`;
 - Produção: Docker multiestágio com Nginx (`Dockerfile` e `nginx.conf`).
 
@@ -68,17 +75,20 @@ O painel de infraestrutura deve ter acesso restrito por identidade ou por IP esp
 
 ## Próximas implementações
 
-1. Separar missões, diagnósticos, pistas, medidas e fórmulas de pontuação em arquivos de dados versionados;
-2. Criar etapa de seleção de missão e campanha com cinco fases;
-3. Adicionar outras doenças e diferenciais diagnósticos (vírus, bactérias, fungos e cenários complexos);
-4. Criar API TypeScript e PostgreSQL para usuários, partidas, decisões e progresso;
-5. Adicionar autenticação, placar e retomada de partidas;
-6. Revisar conteúdo por docentes/área médica antes de disponibilizar a estudantes.
+1. Criar eventos variáveis, justificativas para intervenções não essenciais e maior diversidade de diferenciais diagnósticos;
+2. Criar um banco de questões revisado por docentes, com referências por afirmação e dificuldade calibrada por semestre;
+3. Criar API TypeScript e PostgreSQL para usuários, partidas, decisões e progresso, após definir privacidade e consentimento;
+4. Adicionar autenticação, placar e retomada de partidas;
+5. Revisar conteúdo por docentes/área médica antes de disponibilizar a estudantes.
 
 ## Regras para contribuições
 
 - Todo texto da interface deve estar em português do Brasil;
 - Mantenha mecânicas explicáveis e dados médicos revisáveis, evitando regras escondidas;
+- Preserve o diagnóstico como segredo didático: o aluno deve inferi-lo a partir de dados, não lê-lo na navegação;
+- Não cite o diagnóstico correto na pergunta de justificativa da hipótese; use formulações neutras como “qual dado tem maior peso entre os diferenciais?”;
+- Diferenciais e perguntas de justificativa devem avaliar padrão clínico, cronologia, exposição e limitações dos exames, e não memorização de uma palavra-chave;
+- Trate o celular como tela prioritária: uma ação não pode depender apenas de hover, botões precisam ter área de toque confortável e modais devem poder rolar sem ficar inacessíveis.
 - Não remova alterações existentes sem solicitação explícita;
 - Prefira mudanças pequenas, testáveis e acessíveis;
 - Ao alterar uma mecânica, atualize o `README.md` e este documento quando o contexto de continuidade mudar;
