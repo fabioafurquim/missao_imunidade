@@ -46,6 +46,12 @@ O build precisa passar antes de entregar alterações. Não use dependências de
 
 O Coolify deve construir o `Dockerfile` e expor a porta `80`. Não existem variáveis de ambiente para a versão atual. A aplicação é estática; PostgreSQL não é utilizado ainda.
 
+### Domínio personalizado
+
+O domínio público da aplicação é `https://missaoimunidade.furquim.cloud`. Nesta instância do Coolify, um comportamento legado pode recriar o `docker-compose.yaml` com um domínio automático `sslip.io` após um deploy. A VPS possui o script operacional `/root/fix-domain-missaoimunidade.sh`, que corrige o host nas labels do proxy, garante a rota HTTPS/Let's Encrypt e recria somente o container desta aplicação. Execute-o após um redeploy apenas se o domínio personalizado for substituído novamente.
+
+O registro de domínio persistido no Coolify também foi corrigido. Não registre endereços IP, chaves ou regras específicas de firewall neste repositório.
+
 Quando adicionar backend, prefira uma API TypeScript separada e variáveis de ambiente para a conexão PostgreSQL. Nunca versione `.env`, tokens, chaves privadas, IPs de administração, credenciais de banco ou configurações de firewall.
 
 O painel de infraestrutura deve ter acesso restrito por identidade ou por IP específico. Não amplie permissões para blocos inteiros de operadoras: IPs residenciais são dinâmicos e faixas amplas expõem o painel a terceiros. Para acesso administrativo recorrente, prefira túnel SSH, VPN privada (por exemplo, Tailscale) ou IP fixo.
