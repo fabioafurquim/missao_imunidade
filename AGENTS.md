@@ -52,6 +52,8 @@ O domínio público da aplicação é `https://missaoimunidade.furquim.cloud`. N
 
 O registro de domínio persistido no Coolify também foi corrigido. Não registre endereços IP, chaves ou regras específicas de firewall neste repositório.
 
+A referência versionada do procedimento está em `scripts/fix-coolify-domain.sh`. Ela deve ser mantida consistente com a cópia executável da VPS e pode receber `APP_UUID` e `DOMAIN` por variáveis de ambiente caso seja reutilizada para outra aplicação.
+
 Quando adicionar backend, prefira uma API TypeScript separada e variáveis de ambiente para a conexão PostgreSQL. Nunca versione `.env`, tokens, chaves privadas, IPs de administração, credenciais de banco ou configurações de firewall.
 
 O painel de infraestrutura deve ter acesso restrito por identidade ou por IP específico. Não amplie permissões para blocos inteiros de operadoras: IPs residenciais são dinâmicos e faixas amplas expõem o painel a terceiros. Para acesso administrativo recorrente, prefira túnel SSH, VPN privada (por exemplo, Tailscale) ou IP fixo.

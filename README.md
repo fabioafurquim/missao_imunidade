@@ -39,6 +39,16 @@ O projeto possui um `Dockerfile` multiestágio. No Coolify:
 
 Não há variáveis de ambiente nesta primeira versão e não é necessário conectar o PostgreSQL ainda.
 
+### Domínio personalizado no Coolify
+
+O domínio de produção é `https://missaoimunidade.furquim.cloud`. Se, depois de um deploy, o Coolify substituir esse domínio pelo endereço automático `sslip.io`, conecte-se à VPS como root e execute:
+
+```bash
+/root/fix-domain-missaoimunidade.sh
+```
+
+O script atualiza o `docker-compose.yaml` gerado pelo Coolify, recria somente o container desta aplicação e garante as rotas HTTPS. A cópia versionada em `scripts/fix-coolify-domain.sh` serve como referência e recuperação do script operacional.
+
 ## Decisão técnica
 
 Foi escolhido **React + Vite + TypeScript**, servido por Nginx em produção. É uma estrutura pequena, amplamente conhecida e fácil de continuar. O jogo está separado de infraestrutura persistente de propósito: a próxima etapa pode adicionar uma API em Node.js/TypeScript e PostgreSQL sem mudar a interface.
