@@ -11,10 +11,11 @@ O jogo deve ensinar raciocínio clínico, microbiologia, epidemiologia e saúde 
 A primeira versão navegável implementa cinco dossiês clínico-epidemiológicos fictícios. Os diagnósticos reais são cólera, dengue, sarampo, tuberculose pulmonar e *Candida auris*, mas isso é informação de autoria: não exiba o agente em cards, títulos de missão, briefing ou antes de uma defesa diagnóstica correta.
 
 - Há quatro médicos: emergência, infectologia, epidemiologia médica e patologia clínica;
-- O jogador possui três ações por dia; cada médico entrega duas camadas de evidência, totalizando oito por caso;
-- As ações revelam evidências clínica, de exposição, de vigilância e laboratoriais, em progressão;
-- O surto cresce ao encerrar o dia e cresce menos após ação preventiva;
-- É possível propor diagnóstico antes de obter todas as pistas; um erro consome um dia;
+- Cada ciclo possui três decisões; cada médico entrega duas camadas de evidência, totalizando oito por caso;
+- Cada decisão abre o achado em destaque antes de adicioná-lo ao Quadro do caso, que organiza clínica, exposição, vigilância e laboratório;
+- Ao usar as três decisões, o ciclo é fechado de forma explícita e o cenário evolui; avançar antes disso informa as decisões descartadas e a projeção de casos;
+- Cada missão possui eventos operacionais alternados no fechamento de ciclo; o impacto de pressão deve ser exibido antes de ser aplicado, sem regras ocultas;
+- É possível propor diagnóstico após três evidências; uma defesa insuficiente avança um ciclo e explica a lacuna de raciocínio;
 - O diagnóstico correto libera a etapa de contenção;
 - A missão tem medidas de água segura, atendimento, comunicação e vigilância;
 - Cada fase possui quatro medidas contextualizadas; a vitória exige ao menos três, incluindo duas medidas essenciais;
@@ -24,7 +25,7 @@ A primeira versão navegável implementa cinco dossiês clínico-epidemiológico
 
 Antes da campanha, o aluno informa nome, semestre e eixo de estudo. Esses dados ficam em `localStorage` apenas no navegador e personalizam a saudação e o foco exibido; não são enviados a servidor. Não transforme esta etapa em cadastro, autenticação ou coleta de dados sensíveis sem uma decisão explícita de produto e privacidade.
 
-O tutorial é apresentado no primeiro acesso e pode ser reaberto pelo botão **Como jogar**. Ele explica o fluxo dossiê → equipe médica → defesa da hipótese; preserve esse suporte enquanto o jogo tiver mecânicas por descoberta. A tela de campanha tem mapa-múndi com marcadores em `mapPosition` de cada missão: hover, foco por teclado e toque no card devem atualizar local e marcador. O asset é `src/assets/mapa-mundi-interativo-3d.png`.
+O tutorial é apresentado no primeiro acesso e pode ser reaberto pelo botão **Como jogar**, inclusive durante uma missão. Ele explica o fluxo completo: dossiê → três decisões por ciclo → achado no Quadro do caso → evento com escolha visível → defesa da hipótese → contenção → opinião de teste. Preserve esse suporte enquanto o jogo tiver mecânicas por descoberta. Em celular, o mapa não deve competir com o fluxo de decisão: a leitura do achado e o Quadro do caso têm prioridade. A tela de campanha tem mapa-múndi com marcadores em `mapPosition` de cada missão: hover, foco por teclado e toque no card devem atualizar local e marcador. O asset é `src/assets/mapa-mundi-interativo-3d.png`.
 
 Os cenários usam sínteses de fontes oficiais: OMS para cólera, dengue, sarampo e tuberculose; CDC para *Candida auris*. Antes de incluir ou revisar conteúdo médico, use fontes oficiais/primárias, mantenha o link da fonte em cada missão e trate o jogo como educacional, não como orientação clínica individual.
 
@@ -37,7 +38,7 @@ Os cenários usam sínteses de fontes oficiais: OMS para cólera, dengue, saramp
 - Asset principal: `src/assets/globo-sudeste-asiatico-3d.png`;
 - Produção: Docker multiestágio com Nginx (`Dockerfile` e `nginx.conf`).
 
-O projeto é propositalmente uma SPA sem backend, autenticação ou persistência nesta fase. Isso reduz a complexidade inicial para que estudantes possam evoluir o jogo gradualmente.
+O projeto é propositalmente uma SPA sem backend, autenticação ou persistência de partidas nesta fase. O formulário de opinião de teste é a única exceção: avaliações sem identificação ficam em `localStorage` e podem ser copiadas pelo próprio estudante; não são enviadas a servidor.
 
 ## Desenvolvimento local
 
@@ -75,8 +76,9 @@ O painel de infraestrutura deve ter acesso restrito por identidade ou por IP esp
 
 ## Próximas implementações
 
-1. Criar eventos variáveis, justificativas para intervenções não essenciais e maior diversidade de diferenciais diagnósticos;
-2. Criar um banco de questões revisado por docentes, com referências por afirmação e dificuldade calibrada por semestre;
+1. Conduzir teste de usabilidade com estudantes e consolidar as opiniões locais exportadas;
+2. Criar mais eventos com escolhas de resposta, justificativas para intervenções não essenciais e maior diversidade de diferenciais diagnósticos;
+3. Criar um banco de questões revisado por docentes, com referências por afirmação e dificuldade calibrada por semestre;
 3. Criar API TypeScript e PostgreSQL para usuários, partidas, decisões e progresso, após definir privacidade e consentimento;
 4. Adicionar autenticação, placar e retomada de partidas;
 5. Revisar conteúdo por docentes/área médica antes de disponibilizar a estudantes.

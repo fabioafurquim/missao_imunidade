@@ -5,13 +5,17 @@ Jogo educativo, em português do Brasil, sobre investigação e controle de surt
 ## O que já funciona
 
 - Tela inicial com nome, semestre e eixo de estudo do aluno; os dados ficam apenas no navegador;
-- Tutorial automático no primeiro acesso e botão **Como jogar** para abri-lo novamente;
+- Tutorial automático no primeiro acesso e botão **Como jogar** também durante a missão; o guia detalha os oito passos, do dossiê ao feedback final;
 - Mapa de dossiês com agentes ocultos, desbloqueio progressivo e modo de teste para explorar todas as fases;
 - Mapa-múndi interativo: hover, foco por teclado ou toque em um dossiê atualiza o marcador e a localização exibida;
-- Painel de situação, globo 3D, número de casos, limite de tempo e ações por dia;
-- Equipe de quatro médicos (emergência, infectologia, epidemiologia médica e patologia clínica), cada um com duas ações graduais de investigação;
+- Ciclos claros de três decisões: a conclusão do ciclo mostra a evolução do cenário e avançar antes do fim explicita o custo;
+- Eventos operacionais específicos de cada cenário no fechamento do ciclo, com impacto de pressão sempre visível antes de ser aplicado;
+- Cada evento oferece duas escolhas operacionais, com efeito percentual e justificativa didática visíveis antes da confirmação;
+- Achado em destaque após cada decisão e Quadro do caso que agrupa o progresso das quatro lentes de investigação;
+- Equipe de quatro médicos (emergência, infectologia, epidemiologia médica e patologia clínica), cada um com duas camadas graduais de investigação;
 - Dossiê inicial, oito evidências por caso, diferenciais coerentes, justificativa obrigatória da hipótese e consequência para defesas insuficientes;
-- Medidas de resposta específicas, debriefing, pontuação, aprendizados e links para fontes oficiais.
+- Medidas de resposta específicas, perguntas de discussão por cenário, debriefing, pontuação, aprendizados e links para fontes oficiais.
+- Formulário de opinião no debriefing para testes: guarda a avaliação localmente e copia um resumo para o estudante encaminhar à equipe, sem envio de dados ou conta.
 
 | Dossiê | Cenário | Foco didático |
 | --- | --- | --- |
@@ -44,9 +48,9 @@ As fases e o conteúdo revisável estão concentrados em `src/data/missions.ts`.
 
 A interface e a lógica da campanha ficam em `src/main.tsx`. O perfil inicial usa `localStorage` somente para manter nome, semestre e foco de estudo no navegador do aluno; não há backend nem coleta de dados.
 
-A interface é mobile-first: no celular, toque em um card para pré-visualizar a localização no mapa e use os botões com área de toque ampliada. Modais viram painéis com rolagem segura no rodapé da tela.
+A interface é mobile-first: no celular, o estado do ciclo fica fixo no topo, o mapa não compete com a investigação e cada achado abre como painel de leitura antes de o jogador continuar. O Quadro do caso aparece logo após as escolhas da equipe, com botões de toque ampliados. Modais viram painéis com rolagem segura no rodapé da tela.
 
-O progresso desta versão é mantido apenas na memória do navegador e reinicia ao recarregar a página. Não há login nem PostgreSQL ainda.
+O progresso da partida é mantido apenas na memória do navegador e reinicia ao recarregar a página. As opiniões de teste ficam em `localStorage` neste navegador; não há envio a servidor, login nem PostgreSQL ainda.
 
 ## Publicar no Coolify
 
@@ -75,7 +79,8 @@ Foi escolhido **React + Vite + TypeScript**, servido por Nginx em produção. É
 
 ## Próxima etapa sugerida
 
-1. Persistir usuários, partidas, decisões e progresso com uma API TypeScript e PostgreSQL;
-2. Criar eventos variáveis por missão e feedback mais detalhado para decisões não essenciais;
-3. Incluir revisão docente do conteúdo médico e fontes por versão;
-4. Adicionar autenticação, placar e retomada de partidas.
+1. Conduzir teste de usabilidade com estudantes usando o formulário local e consolidar os resumos copiados;
+2. Criar mais eventos por missão, com escolhas de resposta e consequências justificadas, e ampliar a diversidade de diferenciais;
+3. Criar banco de questões revisado por docentes, com referências por afirmação e dificuldade calibrada por semestre;
+4. Persistir usuários, partidas, decisões e progresso com API TypeScript e PostgreSQL, após definir consentimento e privacidade;
+5. Adicionar autenticação, placar e retomada de partidas.

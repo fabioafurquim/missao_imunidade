@@ -17,6 +17,20 @@ export type Intervention = {
   text: string
   tone: 'blue' | 'orange' | 'green' | 'purple'
   factor: number
+  teachingNote?: string
+}
+
+export type CycleEvent = {
+  id: string
+  title: string
+  text: string
+  options: {
+    id: string
+    label: string
+    text: string
+    pressureFactor: number
+    teachingNote: string
+  }[]
 }
 
 export type DiagnosticCheck = {
@@ -47,6 +61,7 @@ export type Mission = {
   clues: Record<Role, Clue[]>
   interventions: Intervention[]
   requiredInterventions: string[]
+  cycleEvents: CycleEvent[]
   debrief: string
   learningPoints: string[]
   source: { label: string; url: string }
@@ -113,10 +128,14 @@ export const missions: Mission[] = [
     interventions: [
       { id: 'water', icon: '💧', label: 'WASH', title: 'Interromper fonte insegura', text: 'Disponibilizar água tratada, monitorar qualidade e bloquear a distribuição na fonte suspeita.', tone: 'blue', factor: 0.62 },
       { id: 'rehydration', icon: '➕', label: 'Assistência', title: 'Organizar reidratação', text: 'Estruturar pontos de reidratação oral e encaminhar rapidamente pacientes com desidratação grave.', tone: 'orange', factor: 0.68 },
-      { id: 'surveillance', icon: '📋', label: 'Vigilância', title: 'Notificar e buscar casos', text: 'Aplicar definição de caso, mapear domicílios e coletar amostras para confirmação.', tone: 'green', factor: 0.82 },
-      { id: 'communication', icon: '📣', label: 'Comunicação', title: 'Orientar práticas protetoras', text: 'Comunicar água segura, higiene e procura precoce de atendimento.', tone: 'purple', factor: 0.88 },
+      { id: 'surveillance', icon: '📋', label: 'Vigilância', title: 'Notificar e buscar casos', text: 'Aplicar definição de caso, mapear domicílios e coletar amostras para confirmação.', tone: 'green', factor: 0.82, teachingNote: 'Medida complementar: torna a resposta mais precisa ao mostrar onde o risco persiste e orientar o acompanhamento.' },
+      { id: 'communication', icon: '📣', label: 'Comunicação', title: 'Orientar práticas protetoras', text: 'Comunicar água segura, higiene e procura precoce de atendimento.', tone: 'purple', factor: 0.88, teachingNote: 'Medida complementar: ajuda a converter a resposta técnica em práticas que a comunidade consegue adotar.' },
     ],
     requiredInterventions: ['water', 'rehydration'],
+    cycleEvents: [
+      { id: 'm1-water-access', title: 'Abastecimento alternativo sob pressão', text: 'O ponto de distribuição provisório terá capacidade limitada no próximo ciclo. Escolha onde concentrar a coordenação inicial.', options: [{ id: 'm1-water-priority', label: 'Priorizar água segura', text: 'A equipe concentra a distribuição em áreas com maior exposição relatada.', pressureFactor: 1.03, teachingNote: 'Reduz a pressão ao agir mais perto da fonte de exposição, mas exige coordenação territorial.' }, { id: 'm1-care-priority', label: 'Priorizar fluxo assistencial', text: 'A equipe amplia primeiro a organização do atendimento para absorver a procura.', pressureFactor: 1.07, teachingNote: 'Protege a capacidade de cuidado, mas deixa a exposição comunitária mais tempo sem resposta direta.' }] },
+      { id: 'm1-report-delay', title: 'Notificações chegam com atraso', text: 'Parte dos atendimentos ainda não entrou no consolidado do território. Escolha como a equipe reduz a incerteza inicial.', options: [{ id: 'm1-map', label: 'Mapear notificações pendentes', text: 'A equipe reconcilia registros e localiza lacunas no território.', pressureFactor: 1.03, teachingNote: 'Melhora a leitura do foco e ajuda a orientar a resposta seguinte.' }, { id: 'm1-message', label: 'Reforçar orientação pública', text: 'A equipe antecipa uma comunicação simples enquanto os registros são revisados.', pressureFactor: 1.06, teachingNote: 'Pode reduzir comportamentos de risco, mas não substitui saber onde os casos estão.' }] },
+    ],
     debrief: 'O caso descreve cólera: diarreia aquosa aguda, desidratação rápida e vínculo com água potencialmente contaminada. A resposta combina reidratação imediata, vigilância e medidas de água, saneamento e higiene.',
     learningPoints: ['A apresentação pode evoluir rapidamente por perda de volume.', 'Água segura, saneamento e higiene reduzem transmissão.', 'A confirmação laboratorial orienta a vigilância, mas não deve atrasar suporte clínico e resposta inicial.'],
     source: { label: 'OMS — Cólera', url: 'https://www.who.int/news-room/fact-sheets/detail/cholera' },
@@ -174,10 +193,14 @@ export const missions: Mission[] = [
     interventions: [
       { id: 'vector', icon: '🦟', label: 'Vetores', title: 'Eliminar criadouros', text: 'Remover e manejar recipientes com água, com ação territorial focalizada.', tone: 'green', factor: 0.62 },
       { id: 'triage', icon: '🩺', label: 'Assistência', title: 'Implantar triagem de risco', text: 'Reconhecer sinais de alarme, organizar observação e encaminhar casos graves.', tone: 'orange', factor: 0.7 },
-      { id: 'surveillance', icon: '📈', label: 'Vigilância', title: 'Atualizar curva de casos', text: 'Monitorar tendência, distribuição espacial e capacidade dos serviços.', tone: 'blue', factor: 0.83 },
-      { id: 'communication', icon: '📣', label: 'Comunicação', title: 'Mobilizar o território', text: 'Orientar eliminação de criadouros e procura rápida diante de sinais de alarme.', tone: 'purple', factor: 0.88 },
+      { id: 'surveillance', icon: '📈', label: 'Vigilância', title: 'Atualizar curva de casos', text: 'Monitorar tendência, distribuição espacial e capacidade dos serviços.', tone: 'blue', factor: 0.83, teachingNote: 'Medida complementar: permite redistribuir recursos e perceber mudanças na tendência antes que a rede fique sobrecarregada.' },
+      { id: 'communication', icon: '📣', label: 'Comunicação', title: 'Mobilizar o território', text: 'Orientar eliminação de criadouros e procura rápida diante de sinais de alarme.', tone: 'purple', factor: 0.88, teachingNote: 'Medida complementar: amplia a adesão territorial, mas não substitui o manejo ambiental nem a triagem de risco.' },
     ],
     requiredInterventions: ['vector', 'triage'],
+    cycleEvents: [
+      { id: 'm2-rain', title: 'Chuva muda o mapa de risco', text: 'Moradores relatam novos recipientes expostos à água após a chuva. Escolha a primeira frente territorial.', options: [{ id: 'm2-block', label: 'Agir nos quarteirões prioritários', text: 'A equipe focaliza os relatos com maior concentração de recipientes expostos.', pressureFactor: 1.03, teachingNote: 'Foco territorial pode reduzir a pressão mais cedo onde o risco é maior.' }, { id: 'm2-broadcast', label: 'Mobilizar toda a região', text: 'A equipe inicia mensagem ampla de eliminação de criadouros.', pressureFactor: 1.07, teachingNote: 'Amplia alcance, mas a resposta tende a ser menos imediata nos pontos prioritários.' }] },
+      { id: 'm2-triage-load', title: 'Unidade recebe mais procura', text: 'A procura por febre aumenta durante o próximo ciclo. Escolha como proteger a capacidade de resposta.', options: [{ id: 'm2-risk-flow', label: 'Organizar fila por risco', text: 'A equipe separa a avaliação inicial por sinais que exigem prioridade.', pressureFactor: 1.03, teachingNote: 'Organizar o fluxo torna a resposta mais segura quando a demanda aumenta.' }, { id: 'm2-general-flow', label: 'Ampliar orientação de chegada', text: 'A equipe reforça orientações gerais antes da entrada na unidade.', pressureFactor: 1.06, teachingNote: 'Ajuda a ordenar a procura, mas não substitui uma triagem estruturada.' }] },
+    ],
     debrief: 'O caso é dengue. O diagnóstico exige integrar síndrome febril compatível, contexto de Aedes, vigilância e testes apropriados ao momento da doença. O cuidado inclui estratificação de risco, e o controle depende de vigilância e manejo contínuo de criadouros.',
     learningPoints: ['Arboviroses compartilham achados clínicos; o contexto e os exames orientam o diferencial.', 'Sinais de alarme podem surgir quando a febre diminui.', 'O controle vetorial depende de ação ambiental e participação comunitária continuadas.'],
     source: { label: 'OMS — Dengue', url: 'https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue' },
@@ -235,10 +258,14 @@ export const missions: Mission[] = [
     interventions: [
       { id: 'vaccination', icon: '💉', label: 'Imunização', title: 'Avaliar vacinação de contatos', text: 'Organizar atualização vacinal de elegíveis conforme protocolos locais e de vigilância.', tone: 'blue', factor: 0.62 },
       { id: 'contacts', icon: '📈', label: 'Vigilância', title: 'Rastrear contatos', text: 'Identificar exposições e acompanhar pessoas suscetíveis.', tone: 'green', factor: 0.7 },
-      { id: 'precautions', icon: '🛡️', label: 'Proteção', title: 'Reduzir exposições', text: 'Orientar precauções e fluxos assistenciais para diminuir transmissão em serviços e ambientes coletivos.', tone: 'orange', factor: 0.82 },
-      { id: 'communication', icon: '📣', label: 'Comunicação', title: 'Comunicar risco com clareza', text: 'Combater desinformação e orientar procura de cuidado sem criar pânico.', tone: 'purple', factor: 0.88 },
+      { id: 'precautions', icon: '🛡️', label: 'Proteção', title: 'Reduzir exposições', text: 'Orientar precauções e fluxos assistenciais para diminuir transmissão em serviços e ambientes coletivos.', tone: 'orange', factor: 0.82, teachingNote: 'Medida complementar: reduz oportunidades imediatas de exposição enquanto as ações essenciais são organizadas.' },
+      { id: 'communication', icon: '📣', label: 'Comunicação', title: 'Comunicar risco com clareza', text: 'Combater desinformação e orientar procura de cuidado sem criar pânico.', tone: 'purple', factor: 0.88, teachingNote: 'Medida complementar: favorece decisões informadas e reduz ruído, mas precisa estar alinhada à vigilância.' },
     ],
     requiredInterventions: ['vaccination', 'contacts'],
+    cycleEvents: [
+      { id: 'm3-campus-event', title: 'Evento do campus mantém a circulação', text: 'Uma atividade coletiva prevista para o próximo ciclo amplia a necessidade de reconhecer contatos e comunicar medidas de proteção.', options: [{ id: 'm3-contact-priority', label: 'Priorizar contatos do evento', text: 'A equipe direciona a busca às pessoas com exposição mais recente.', pressureFactor: 1.03, teachingNote: 'A priorização ajuda a reduzir incerteza onde a exposição é mais relevante.' }, { id: 'm3-campus-message', label: 'Comunicar a todo o campus', text: 'A equipe emite orientação ampla antes de completar a busca direcionada.', pressureFactor: 1.06, teachingNote: 'A mensagem alcança mais pessoas, mas não substitui a investigação ativa de contatos.' }] },
+      { id: 'm3-contact-list', title: 'Lista de contatos ainda está incompleta', text: 'A equipe recebe relatos de pessoas que não foram localizadas na primeira busca. Escolha o próximo movimento.', options: [{ id: 'm3-network', label: 'Reconstruir a rede', text: 'A equipe cruza horários, ambientes e vínculos de convivência.', pressureFactor: 1.03, teachingNote: 'Reconstruir a rede torna a vigilância mais dirigida.' }, { id: 'm3-open-channel', label: 'Abrir canal de autorrelato', text: 'A equipe convida possíveis expostos a se identificarem.', pressureFactor: 1.06, teachingNote: 'Pode ampliar o alcance, mas depende de adesão e não resolve toda a lacuna de contatos.' }] },
+    ],
     debrief: 'O caso é sarampo. Febre, tosse, coriza, conjuntivite e exantema em uma rede de contatos suscetíveis sustentam a hipótese. A resposta exige vigilância ágil, redução de exposições e vacinação conforme orientações locais.',
     learningPoints: ['Exantema deve ser interpretado junto à cronologia do pródromo.', 'Doenças exantemáticas têm diferenciais clínicos relevantes.', 'Em doenças muito transmissíveis, a rede de contatos muda a urgência da resposta.'],
     source: { label: 'OMS — Sarampo', url: 'https://www.who.int/news-room/fact-sheets/detail/measles' },
@@ -296,10 +323,14 @@ export const missions: Mission[] = [
     interventions: [
       { id: 'testing', icon: '🧪', label: 'Diagnóstico', title: 'Ampliar avaliação e testes', text: 'Facilitar avaliação de sintomáticos e exames recomendados pelo protocolo local.', tone: 'blue', factor: 0.64 },
       { id: 'contacts', icon: '📈', label: 'Vigilância', title: 'Investigar contatos', text: 'Priorizar contatos expostos e organizar seguimento.', tone: 'green', factor: 0.72 },
-      { id: 'ventilation', icon: '↗', label: 'Ambiente', title: 'Reduzir exposição em locais fechados', text: 'Melhorar ventilação e reduzir permanência em ambientes compartilhados pouco ventilados.', tone: 'orange', factor: 0.83 },
-      { id: 'support', icon: '📣', label: 'Comunicação', title: 'Reduzir estigma e apoiar cuidado', text: 'Orientar procura de atendimento e vínculo com serviços de saúde.', tone: 'purple', factor: 0.9 },
+      { id: 'ventilation', icon: '↗', label: 'Ambiente', title: 'Reduzir exposição em locais fechados', text: 'Melhorar ventilação e reduzir permanência em ambientes compartilhados pouco ventilados.', tone: 'orange', factor: 0.83, teachingNote: 'Medida complementar: reduz exposição no ambiente, mas não substitui a identificação oportuna de casos e contatos.' },
+      { id: 'support', icon: '📣', label: 'Comunicação', title: 'Reduzir estigma e apoiar cuidado', text: 'Orientar procura de atendimento e vínculo com serviços de saúde.', tone: 'purple', factor: 0.9, teachingNote: 'Medida complementar: melhora acesso e continuidade do cuidado, contribuindo para uma resposta sustentável.' },
     ],
     requiredInterventions: ['testing', 'contacts'],
+    cycleEvents: [
+      { id: 'm4-ventilation', title: 'Ambientes compartilhados seguem ocupados', text: 'A manutenção de um espaço de convivência foi adiada. Escolha a ação operacional mais imediata.', options: [{ id: 'm4-redistribute', label: 'Redistribuir atividades', text: 'A equipe reduz a concentração de pessoas nos espaços mais fechados.', pressureFactor: 1.03, teachingNote: 'Reduzir exposição no ambiente complementa a identificação de casos.' }, { id: 'm4-advice', label: 'Reforçar orientação individual', text: 'A equipe comunica recomendações, mantendo a rotina do espaço.', pressureFactor: 1.06, teachingNote: 'A orientação ajuda, mas não altera sozinha o contexto compartilhado.' }] },
+      { id: 'm4-delayed-care', title: 'Sintomáticos adiaram a procura por cuidado', text: 'Novos relatos indicam que parte das pessoas aguardou antes de buscar avaliação. Escolha como aproximar a resposta.', options: [{ id: 'm4-active-search', label: 'Fazer busca de sintomáticos', text: 'A equipe procura ativamente pessoas com relato compatível na rede afetada.', pressureFactor: 1.03, teachingNote: 'A busca ativa diminui a dependência de que a pessoa procure cuidado por conta própria.' }, { id: 'm4-general-message', label: 'Difundir mensagem de procura', text: 'A equipe reforça uma comunicação geral sobre onde buscar avaliação.', pressureFactor: 1.06, teachingNote: 'Reduz barreiras de informação, mas pode deixar casos sem identificação imediata.' }] },
+    ],
     debrief: 'O caso é tuberculose pulmonar. O tempo de evolução, os sintomas constitucionais, o contexto de exposição e o teste molecular formam a base da hipótese. A resposta combina diagnóstico oportuno, investigação de contatos e redução de exposições, seguindo protocolos locais.',
     learningPoints: ['A cronologia é tão importante quanto um sintoma isolado no diferencial.', 'Tuberculose pulmonar ativa pode demandar medidas para reduzir exposição aérea.', 'A investigação de contatos é parte do cuidado e da vigilância.'],
     source: { label: 'OMS — Tuberculose', url: 'https://www.who.int/news-room/fact-sheets/detail/tuberculosis' },
@@ -357,10 +388,14 @@ export const missions: Mission[] = [
     interventions: [
       { id: 'screening', icon: '🧪', label: 'Triagem', title: 'Rastrear colonização', text: 'Realizar triagem de expostos conforme protocolo do serviço para orientar precauções.', tone: 'blue', factor: 0.64 },
       { id: 'cleaning', icon: '🧼', label: 'Ambiente', title: 'Reforçar desinfecção', text: 'Desinfetar superfícies de alto toque e equipamentos compartilhados com produto apropriado.', tone: 'green', factor: 0.71 },
-      { id: 'precautions', icon: '🧤', label: 'Proteção', title: 'Aplicar precauções de contato', text: 'Reforçar higiene das mãos, equipamentos de proteção e fluxos na unidade.', tone: 'orange', factor: 0.82 },
-      { id: 'handoff', icon: '📣', label: 'Coordenação', title: 'Comunicar transferências', text: 'Garantir comunicação do status entre setores e serviços envolvidos.', tone: 'purple', factor: 0.9 },
+      { id: 'precautions', icon: '🧤', label: 'Proteção', title: 'Aplicar precauções de contato', text: 'Reforçar higiene das mãos, equipamentos de proteção e fluxos na unidade.', tone: 'orange', factor: 0.82, teachingNote: 'Medida complementar: diminui oportunidades de transmissão no cuidado cotidiano, mas precisa acompanhar triagem e desinfecção.' },
+      { id: 'handoff', icon: '📣', label: 'Coordenação', title: 'Comunicar transferências', text: 'Garantir comunicação do status entre setores e serviços envolvidos.', tone: 'purple', factor: 0.9, teachingNote: 'Medida complementar: evita quebra de informação entre setores e sustenta as precauções já iniciadas.' },
     ],
     requiredInterventions: ['screening', 'cleaning'],
+    cycleEvents: [
+      { id: 'm5-transfer', title: 'Transferência exige coordenação', text: 'Um paciente exposto precisa mudar de setor no próximo ciclo. Escolha como proteger a continuidade da informação.', options: [{ id: 'm5-handoff', label: 'Confirmar passagem de caso', text: 'A equipe registra e confirma o status antes da transferência.', pressureFactor: 1.03, teachingNote: 'A passagem estruturada reduz perda de informação entre equipes.' }, { id: 'm5-alert', label: 'Enviar alerta geral', text: 'A equipe avisa os setores, mas sem confirmação individual do fluxo.', pressureFactor: 1.06, teachingNote: 'O alerta amplia consciência, mas pode não garantir continuidade em cada transição.' }] },
+      { id: 'm5-equipment', title: 'Equipamento compartilhado entra em uso', text: 'A unidade reorganiza equipamentos entre leitos. Escolha a primeira barreira de segurança.', options: [{ id: 'm5-dedicate', label: 'Priorizar equipamentos dedicados', text: 'A equipe separa equipamentos para o grupo de maior risco enquanto reorganiza o setor.', pressureFactor: 1.03, teachingNote: 'Reduzir compartilhamento torna a resposta ambiental mais consistente.' }, { id: 'm5-reminder', label: 'Reforçar lembretes de fluxo', text: 'A equipe reforça a rotina existente sem alterar a organização dos equipamentos.', pressureFactor: 1.06, teachingNote: 'Lembretes ajudam a adesão, mas não eliminam a complexidade do compartilhamento.' }] },
+    ],
     debrief: 'O caso é Candida auris. A identificação pode exigir métodos especializados; colonização assintomática, persistência ambiental e transmissão em serviços de saúde são elementos importantes. A resposta envolve triagem, precauções e desinfecção ambiental orientadas pelo controle de infecção.',
     learningPoints: ['Colonização não é sinônimo de infecção, mas pode sustentar transmissão.', 'A identificação laboratorial correta muda a resposta de controle de infecção.', 'Medidas devem seguir o protocolo do serviço e a orientação de especialistas.'],
     source: { label: 'CDC — Candida auris', url: 'https://www.cdc.gov/candida-auris/about/index.html' },
