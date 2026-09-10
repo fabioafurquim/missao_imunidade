@@ -61,10 +61,28 @@ export type Mission = {
   clues: Record<Role, Clue[]>
   interventions: Intervention[]
   requiredInterventions: string[]
+  priorityAction: {
+    label: string
+    title: string
+    text: string
+    action: string
+    completion: string
+    metricLabel: string
+    before: string
+    after: string
+  }
   cycleEvents: CycleEvent[]
   debrief: string
   learningPoints: string[]
   source: { label: string; url: string }
+}
+
+export type DailyDispatch = {
+  missionId: number
+  label: string
+  title: string
+  text: string
+  objective: string
 }
 
 export const team: { role: Role; icon: string; specialty: string; name: string; action: string; tone: Intervention['tone'] }[] = [
@@ -72,6 +90,14 @@ export const team: { role: Role; icon: string; specialty: string; name: string; 
   { role: 'infectologia', icon: '🧠', specialty: 'Infectologia', name: 'Dr. Rafael Nunes', action: 'Refinar hipóteses', tone: 'blue' },
   { role: 'epidemiologia', icon: '📈', specialty: 'Epidemiologia médica', name: 'Dra. Camila Torres', action: 'Reconstruir cadeia de exposição', tone: 'green' },
   { role: 'laboratorio', icon: '🔬', specialty: 'Patologia clínica', name: 'Dr. André Lima', action: 'Interpretar exames', tone: 'purple' },
+]
+
+export const dailyDispatches: DailyDispatch[] = [
+  { missionId: 1, label: 'ALERTA COSTEIRO', title: 'A água mudou o jogo', text: 'Depois de uma enchente, a central recebeu um agrupamento de casos em poucas horas.', objective: 'Proteja pacientes e investigue a fonte comum.' },
+  { missionId: 2, label: 'ALERTA URBANO', title: 'Chuva no radar', text: 'A procura por febre aumentou e o território precisa decidir onde agir primeiro.', objective: 'Leia o risco, proteja a triagem e reduza criadouros.' },
+  { missionId: 3, label: 'ALERTA DE REDE', title: 'Contatos em movimento', text: 'Um evento fechado ligou estudantes com sintomas respiratórios e exantema.', objective: 'Reconstrua a cadeia e reduza novas exposições.' },
+  { missionId: 4, label: 'ALERTA RESPIRATÓRIO', title: 'O ar também é uma pista', text: 'Uma unidade registra casos subagudos ligados por espaços compartilhados.', objective: 'Combine investigação, proteção do cuidado e busca de contatos.' },
+  { missionId: 5, label: 'ALERTA HOSPITALAR', title: 'Barreiras sob pressão', text: 'Uma identificação incomum exige resposta coordenada antes de novas transferências.', objective: 'Mapeie expostos e fortaleça as barreiras de controle.' },
 ]
 
 export const missions: Mission[] = [
@@ -132,6 +158,7 @@ export const missions: Mission[] = [
       { id: 'communication', icon: '📣', label: 'Comunicação', title: 'Orientar práticas protetoras', text: 'Comunicar água segura, higiene e procura precoce de atendimento.', tone: 'purple', factor: 0.88, teachingNote: 'Medida complementar: ajuda a converter a resposta técnica em práticas que a comunidade consegue adotar.' },
     ],
     requiredInterventions: ['water', 'rehydration'],
+    priorityAction: { label: 'PRIORIDADE CLÍNICA', title: 'Organizar reidratação agora', text: 'Há sinais de desidratação. A equipe abre um ponto de reidratação e prioriza os pacientes com maior risco.', action: 'Priorizar atendimento', completion: 'Cuidado organizado', metricLabel: 'ATENDIMENTO', before: 'sob pressão', after: 'organizado' },
     cycleEvents: [
       { id: 'm1-water-access', title: 'Abastecimento alternativo sob pressão', text: 'O ponto de distribuição provisório terá capacidade limitada no próximo ciclo. Escolha onde concentrar a coordenação inicial.', options: [{ id: 'm1-water-priority', label: 'Priorizar água segura', text: 'A equipe concentra a distribuição em áreas com maior exposição relatada.', pressureFactor: 1.03, teachingNote: 'Reduz a pressão ao agir mais perto da fonte de exposição, mas exige coordenação territorial.' }, { id: 'm1-care-priority', label: 'Priorizar fluxo assistencial', text: 'A equipe amplia primeiro a organização do atendimento para absorver a procura.', pressureFactor: 1.07, teachingNote: 'Protege a capacidade de cuidado, mas deixa a exposição comunitária mais tempo sem resposta direta.' }] },
       { id: 'm1-report-delay', title: 'Notificações chegam com atraso', text: 'Parte dos atendimentos ainda não entrou no consolidado do território. Escolha como a equipe reduz a incerteza inicial.', options: [{ id: 'm1-map', label: 'Mapear notificações pendentes', text: 'A equipe reconcilia registros e localiza lacunas no território.', pressureFactor: 1.03, teachingNote: 'Melhora a leitura do foco e ajuda a orientar a resposta seguinte.' }, { id: 'm1-message', label: 'Reforçar orientação pública', text: 'A equipe antecipa uma comunicação simples enquanto os registros são revisados.', pressureFactor: 1.06, teachingNote: 'Pode reduzir comportamentos de risco, mas não substitui saber onde os casos estão.' }] },
@@ -197,6 +224,7 @@ export const missions: Mission[] = [
       { id: 'communication', icon: '📣', label: 'Comunicação', title: 'Mobilizar o território', text: 'Orientar eliminação de criadouros e procura rápida diante de sinais de alarme.', tone: 'purple', factor: 0.88, teachingNote: 'Medida complementar: amplia a adesão territorial, mas não substitui o manejo ambiental nem a triagem de risco.' },
     ],
     requiredInterventions: ['vector', 'triage'],
+    priorityAction: { label: 'PRIORIDADE ASSISTENCIAL', title: 'Organizar triagem de sinais de alarme', text: 'A equipe separa rapidamente pacientes com sinais que pedem avaliação imediata enquanto a investigação continua.', action: 'Abrir triagem', completion: 'Triagem ativa', metricLabel: 'TRIAGEM', before: 'sob pressão', after: 'organizada' },
     cycleEvents: [
       { id: 'm2-rain', title: 'Chuva muda o mapa de risco', text: 'Moradores relatam novos recipientes expostos à água após a chuva. Escolha a primeira frente territorial.', options: [{ id: 'm2-block', label: 'Agir nos quarteirões prioritários', text: 'A equipe focaliza os relatos com maior concentração de recipientes expostos.', pressureFactor: 1.03, teachingNote: 'Foco territorial pode reduzir a pressão mais cedo onde o risco é maior.' }, { id: 'm2-broadcast', label: 'Mobilizar toda a região', text: 'A equipe inicia mensagem ampla de eliminação de criadouros.', pressureFactor: 1.07, teachingNote: 'Amplia alcance, mas a resposta tende a ser menos imediata nos pontos prioritários.' }] },
       { id: 'm2-triage-load', title: 'Unidade recebe mais procura', text: 'A procura por febre aumenta durante o próximo ciclo. Escolha como proteger a capacidade de resposta.', options: [{ id: 'm2-risk-flow', label: 'Organizar fila por risco', text: 'A equipe separa a avaliação inicial por sinais que exigem prioridade.', pressureFactor: 1.03, teachingNote: 'Organizar o fluxo torna a resposta mais segura quando a demanda aumenta.' }, { id: 'm2-general-flow', label: 'Ampliar orientação de chegada', text: 'A equipe reforça orientações gerais antes da entrada na unidade.', pressureFactor: 1.06, teachingNote: 'Ajuda a ordenar a procura, mas não substitui uma triagem estruturada.' }] },
@@ -252,7 +280,7 @@ export const missions: Mission[] = [
       ],
       laboratorio: [
         { id: 'm3-la1', role: 'laboratorio', category: 'Laboratório', level: 1, title: 'Amostras prioritárias', text: 'Foram coletadas amostras conforme fluxo de vigilância para investigação de vírus exantemático.' },
-        { id: 'm3-la2', role: 'laboratorio', category: 'Laboratório', level: 2, title: 'Resultado de referência', text: 'O teste de referência detecta material compatível com vírus respiratório altamente transmissível do grupo do sarampo.' },
+        { id: 'm3-la2', role: 'laboratorio', category: 'Laboratório', level: 2, title: 'Resultado de referência', text: 'O teste de referência sustenta a principal hipótese viral da equipe. A confirmação nominal é comunicada somente depois da defesa diagnóstica.' },
       ],
     },
     interventions: [
@@ -262,6 +290,7 @@ export const missions: Mission[] = [
       { id: 'communication', icon: '📣', label: 'Comunicação', title: 'Comunicar risco com clareza', text: 'Combater desinformação e orientar procura de cuidado sem criar pânico.', tone: 'purple', factor: 0.88, teachingNote: 'Medida complementar: favorece decisões informadas e reduz ruído, mas precisa estar alinhada à vigilância.' },
     ],
     requiredInterventions: ['vaccination', 'contacts'],
+    priorityAction: { label: 'PRIORIDADE DE REDE', title: 'Separar casos e iniciar mapa de contatos', text: 'A central reduz novas exposições ao orientar afastamento dos sintomáticos e registrar contatos prioritários.', action: 'Proteger contatos', completion: 'Rede protegida', metricLabel: 'EXPOSIÇÃO', before: 'ativa', after: 'reduzida' },
     cycleEvents: [
       { id: 'm3-campus-event', title: 'Evento do campus mantém a circulação', text: 'Uma atividade coletiva prevista para o próximo ciclo amplia a necessidade de reconhecer contatos e comunicar medidas de proteção.', options: [{ id: 'm3-contact-priority', label: 'Priorizar contatos do evento', text: 'A equipe direciona a busca às pessoas com exposição mais recente.', pressureFactor: 1.03, teachingNote: 'A priorização ajuda a reduzir incerteza onde a exposição é mais relevante.' }, { id: 'm3-campus-message', label: 'Comunicar a todo o campus', text: 'A equipe emite orientação ampla antes de completar a busca direcionada.', pressureFactor: 1.06, teachingNote: 'A mensagem alcança mais pessoas, mas não substitui a investigação ativa de contatos.' }] },
       { id: 'm3-contact-list', title: 'Lista de contatos ainda está incompleta', text: 'A equipe recebe relatos de pessoas que não foram localizadas na primeira busca. Escolha o próximo movimento.', options: [{ id: 'm3-network', label: 'Reconstruir a rede', text: 'A equipe cruza horários, ambientes e vínculos de convivência.', pressureFactor: 1.03, teachingNote: 'Reconstruir a rede torna a vigilância mais dirigida.' }, { id: 'm3-open-channel', label: 'Abrir canal de autorrelato', text: 'A equipe convida possíveis expostos a se identificarem.', pressureFactor: 1.06, teachingNote: 'Pode ampliar o alcance, mas depende de adesão e não resolve toda a lacuna de contatos.' }] },
@@ -317,7 +346,7 @@ export const missions: Mission[] = [
       ],
       laboratorio: [
         { id: 'm4-la1', role: 'laboratorio', category: 'Laboratório', level: 1, title: 'Imagem inicial', text: 'O exame de imagem mostra alterações predominantes em lobos superiores em pacientes selecionados; o achado não confirma etiologia isoladamente.' },
-        { id: 'm4-la2', role: 'laboratorio', category: 'Laboratório', level: 2, title: 'Teste molecular', text: 'Amostra respiratória apresenta resultado compatível com complexo Mycobacterium tuberculosis em teste molecular rápido.' },
+        { id: 'm4-la2', role: 'laboratorio', category: 'Laboratório', level: 2, title: 'Teste molecular', text: 'O teste molecular rápido sustenta a principal hipótese micobacteriana da equipe. Interprete-o junto ao quadro clínico, à cronologia e à exposição.' },
       ],
     },
     interventions: [
@@ -327,6 +356,7 @@ export const missions: Mission[] = [
       { id: 'support', icon: '📣', label: 'Comunicação', title: 'Reduzir estigma e apoiar cuidado', text: 'Orientar procura de atendimento e vínculo com serviços de saúde.', tone: 'purple', factor: 0.9, teachingNote: 'Medida complementar: melhora acesso e continuidade do cuidado, contribuindo para uma resposta sustentável.' },
     ],
     requiredInterventions: ['testing', 'contacts'],
+    priorityAction: { label: 'PRIORIDADE RESPIRATÓRIA', title: 'Melhorar a circulação de ar', text: 'A equipe reorganiza o fluxo em ambiente compartilhado e orienta medidas respiratórias enquanto investiga os casos.', action: 'Proteger o ambiente', completion: 'Ambiente protegido', metricLabel: 'AMBIENTE', before: 'vulnerável', after: 'protegido' },
     cycleEvents: [
       { id: 'm4-ventilation', title: 'Ambientes compartilhados seguem ocupados', text: 'A manutenção de um espaço de convivência foi adiada. Escolha a ação operacional mais imediata.', options: [{ id: 'm4-redistribute', label: 'Redistribuir atividades', text: 'A equipe reduz a concentração de pessoas nos espaços mais fechados.', pressureFactor: 1.03, teachingNote: 'Reduzir exposição no ambiente complementa a identificação de casos.' }, { id: 'm4-advice', label: 'Reforçar orientação individual', text: 'A equipe comunica recomendações, mantendo a rotina do espaço.', pressureFactor: 1.06, teachingNote: 'A orientação ajuda, mas não altera sozinha o contexto compartilhado.' }] },
       { id: 'm4-delayed-care', title: 'Sintomáticos adiaram a procura por cuidado', text: 'Novos relatos indicam que parte das pessoas aguardou antes de buscar avaliação. Escolha como aproximar a resposta.', options: [{ id: 'm4-active-search', label: 'Fazer busca de sintomáticos', text: 'A equipe procura ativamente pessoas com relato compatível na rede afetada.', pressureFactor: 1.03, teachingNote: 'A busca ativa diminui a dependência de que a pessoa procure cuidado por conta própria.' }, { id: 'm4-general-message', label: 'Difundir mensagem de procura', text: 'A equipe reforça uma comunicação geral sobre onde buscar avaliação.', pressureFactor: 1.06, teachingNote: 'Reduz barreiras de informação, mas pode deixar casos sem identificação imediata.' }] },
@@ -382,7 +412,7 @@ export const missions: Mission[] = [
       ],
       laboratorio: [
         { id: 'm5-la1', role: 'laboratorio', category: 'Laboratório', level: 1, title: 'Identificação inconsistente', text: 'Métodos usuais produzem identificação incerta de uma levedura; o laboratório solicita confirmação por método especializado.' },
-        { id: 'm5-la2', role: 'laboratorio', category: 'Laboratório', level: 2, title: 'Confirmação especializada', text: 'O método de referência confirma Candida auris, espécie associada a surtos em serviços de saúde e resistência a múltiplos antifúngicos.' },
+        { id: 'm5-la2', role: 'laboratorio', category: 'Laboratório', level: 2, title: 'Confirmação especializada', text: 'O método de referência confirma uma levedura de preocupação para surtos em serviços de saúde, com potencial de resistência a múltiplos antifúngicos. A identificação nominal depende da defesa diagnóstica.' },
       ],
     },
     interventions: [
@@ -392,6 +422,7 @@ export const missions: Mission[] = [
       { id: 'handoff', icon: '📣', label: 'Coordenação', title: 'Comunicar transferências', text: 'Garantir comunicação do status entre setores e serviços envolvidos.', tone: 'purple', factor: 0.9, teachingNote: 'Medida complementar: evita quebra de informação entre setores e sustenta as precauções já iniciadas.' },
     ],
     requiredInterventions: ['screening', 'cleaning'],
+    priorityAction: { label: 'PRIORIDADE DE BARREIRA', title: 'Organizar precauções de contato', text: 'A central reforça higiene das mãos, equipamentos de proteção e um fluxo seguro para pacientes expostos.', action: 'Ativar barreiras', completion: 'Barreiras ativas', metricLabel: 'BARREIRAS', before: 'vulneráveis', after: 'ativas' },
     cycleEvents: [
       { id: 'm5-transfer', title: 'Transferência exige coordenação', text: 'Um paciente exposto precisa mudar de setor no próximo ciclo. Escolha como proteger a continuidade da informação.', options: [{ id: 'm5-handoff', label: 'Confirmar passagem de caso', text: 'A equipe registra e confirma o status antes da transferência.', pressureFactor: 1.03, teachingNote: 'A passagem estruturada reduz perda de informação entre equipes.' }, { id: 'm5-alert', label: 'Enviar alerta geral', text: 'A equipe avisa os setores, mas sem confirmação individual do fluxo.', pressureFactor: 1.06, teachingNote: 'O alerta amplia consciência, mas pode não garantir continuidade em cada transição.' }] },
       { id: 'm5-equipment', title: 'Equipamento compartilhado entra em uso', text: 'A unidade reorganiza equipamentos entre leitos. Escolha a primeira barreira de segurança.', options: [{ id: 'm5-dedicate', label: 'Priorizar equipamentos dedicados', text: 'A equipe separa equipamentos para o grupo de maior risco enquanto reorganiza o setor.', pressureFactor: 1.03, teachingNote: 'Reduzir compartilhamento torna a resposta ambiental mais consistente.' }, { id: 'm5-reminder', label: 'Reforçar lembretes de fluxo', text: 'A equipe reforça a rotina existente sem alterar a organização dos equipamentos.', pressureFactor: 1.06, teachingNote: 'Lembretes ajudam a adesão, mas não eliminam a complexidade do compartilhamento.' }] },
