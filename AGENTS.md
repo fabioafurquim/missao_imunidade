@@ -14,6 +14,7 @@ A primeira versão navegável implementa cinco dossiês clínico-epidemiológico
 - Cada ciclo possui três decisões; cada médico entrega duas camadas de evidência, totalizando oito por caso;
 - Cada decisão abre o achado em destaque antes de adicioná-lo ao Quadro do caso, que organiza clínica, exposição, vigilância e laboratório;
 - Todos os dossiês operam como central de comando: incluem indicador de prioridade, recursos operacionais, solicitação de exame com resultado no ciclo seguinte e uma ação contextualizada disponível antes da confirmação diagnóstica. Porto de Mahan é a referência da cena inicial; os demais usam os painéis de `src/assets/cenarios-operacao.png`;
+- A partida ativa é salva localmente e deve restaurar ciclo, recursos, decisões, achados, exame pendente e fase após recarregar. O debriefing é o encerramento visual do caso: não mantenha no fundo textos que orientem investigação ou defesa diagnóstica;
 - O debriefing registra competências de raciocínio/diagnóstico, investigação, conduta/tratamento, controle/prevenção e tempo de resposta com base nas decisões da partida;
 - A campanha oferece uma missão diária rotativa, identificada pela data de São Paulo, que concede bônus uma vez ao dia e mantém uma sequência de acessos; ela deve reutilizar dossiês revisados e não expor o diagnóstico antes da defesa;
 - Ao usar as três decisões, o ciclo é fechado de forma explícita e o cenário evolui; avançar antes disso informa as decisões descartadas e a projeção de casos;
@@ -41,7 +42,7 @@ Os cenários usam sínteses de fontes oficiais: OMS para cólera, dengue, saramp
 - Asset principal: `src/assets/globo-sudeste-asiatico-3d.png`;
 - Produção: Docker multiestágio com servidor Node na porta 80; a SPA e a API de progresso são entregues pelo mesmo processo.
 
-O projeto não possui autenticação ou cadastro. Cada navegador cria um identificador anônimo para persistir XP, moedas, dossiês concluídos e o resgate da missão diária em `localStorage` e, se `DATABASE_URL` estiver configurada, no PostgreSQL. Não associe esse identificador a nome, e-mail ou dados sensíveis sem decisão explícita de produto e privacidade. O formulário de opinião de teste continua local e pode ser copiado pelo próprio estudante; não é enviado a servidor.
+O projeto não possui autenticação ou cadastro. Cada navegador cria um identificador anônimo para persistir XP, moedas, dossiês concluídos e o resgate da missão diária em `localStorage` e, se `DATABASE_URL` estiver configurada, no PostgreSQL. A retomada da partida fica no navegador nesta fase. Não associe esse identificador a nome, e-mail ou dados sensíveis sem decisão explícita de produto e privacidade. O formulário de opinião de teste continua local e pode ser copiado pelo próprio estudante; não é enviado a servidor.
 
 ## Desenvolvimento local
 

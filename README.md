@@ -23,6 +23,7 @@ Jogo educativo, em português do Brasil, sobre investigação e controle de surt
 - Missão diária rotativa: um alerta reutiliza um dossiê com contexto e objetivo próprios; a primeira conclusão do dia concede +80 XP, +15 moedas e alimenta a sequência de acessos.
 - Todos os dossiês incluem uma cena operacional, uma prioridade visível antes do diagnóstico, recursos limitados e exame de laboratório que consome dois recursos e chega no ciclo seguinte.
 - Quando Nina indica as missões da equipe, os quatro cards clicáveis pulsam com uma seta visual até o jogador tomar a primeira decisão.
+- Partidas em andamento são retomadas no mesmo navegador após recarregar a página; o dossiê concluído abre o debriefing e não mantém instruções de investigação ao fundo.
 
 | Dossiê | Cenário | Foco didático |
 | --- | --- | --- |
@@ -57,7 +58,7 @@ A interface e a lógica da campanha ficam em `src/main.tsx`. O perfil inicial us
 
 A interface é mobile-first: no celular, o estado do ciclo fica fixo no topo, o mapa não compete com a investigação e cada achado abre como painel de leitura antes de o jogador continuar. O Quadro do caso aparece logo após as escolhas da equipe, com botões de toque ampliados. Todos os modais, inclusive o debriefing, possuem rolagem segura em telas baixas.
 
-Recursos, resultados pendentes, score e desempenho por competências pertencem somente à sessão atual. XP, moedas, missões concluídas e o resgate da missão diária ficam em `localStorage` e, quando `DATABASE_URL` estiver configurada, também são enviados para PostgreSQL pela API própria. O identificador é anônimo e gerado no navegador; não há login, senha nem cadastro. As opiniões de teste continuam somente em `localStorage`.
+Recursos, resultados pendentes, score, decisões e desempenho por competências da partida em andamento ficam em `localStorage` para permitir retomada no mesmo navegador. XP, moedas, missões concluídas e o resgate da missão diária ficam em `localStorage` e, quando `DATABASE_URL` estiver configurada, também são enviados para PostgreSQL pela API própria. O identificador é anônimo e gerado no navegador; não há login, senha nem cadastro. As opiniões de teste continuam somente em `localStorage`.
 
 ## Publicar no Coolify
 
