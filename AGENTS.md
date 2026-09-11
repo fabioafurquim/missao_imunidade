@@ -14,6 +14,7 @@ A primeira versão navegável implementa cinco dossiês clínico-epidemiológico
 - Cada ciclo possui três decisões; cada médico entrega duas camadas de evidência, totalizando oito por caso;
 - Cada decisão abre o achado em destaque antes de adicioná-lo ao Quadro do caso, que organiza clínica, exposição, vigilância e laboratório;
 - Todos os dossiês operam como central de comando: incluem indicador de prioridade, recursos operacionais, solicitação de exame com resultado no ciclo seguinte e uma ação contextualizada disponível antes da confirmação diagnóstica. Porto de Mahan é a referência da cena inicial; os demais usam os painéis de `src/assets/cenarios-operacao.png`;
+- Desafios cronometrados só podem ocorrer em decisões específicas, com propósito didático, impacto e recompensa explicados antes de iniciarem. Não aplique penalidades de tempo escondidas ou uma contagem contínua durante a investigação;
 - A partida ativa é salva localmente e deve restaurar ciclo, recursos, decisões, achados, exame pendente e fase após recarregar. O debriefing é o encerramento visual do caso: não mantenha no fundo textos que orientem investigação ou defesa diagnóstica;
 - O debriefing registra competências de raciocínio/diagnóstico, investigação, conduta/tratamento, controle/prevenção e tempo de resposta com base nas decisões da partida;
 - A campanha oferece uma missão diária rotativa, identificada pela data de São Paulo, que concede bônus uma vez ao dia e mantém uma sequência de acessos; ela deve reutilizar dossiês revisados e não expor o diagnóstico antes da defesa;
@@ -29,7 +30,7 @@ A primeira versão navegável implementa cinco dossiês clínico-epidemiológico
 
 Antes da campanha, o aluno informa nome, semestre e eixo de estudo. Esses dados ficam em `localStorage` apenas no navegador e personalizam a saudação e o foco exibido; não são enviados a servidor. Não transforme esta etapa em cadastro, autenticação ou coleta de dados sensíveis sem uma decisão explícita de produto e privacidade.
 
-O tutorial é apresentado no primeiro acesso e pode ser reaberto pelo botão **Como jogar**, inclusive durante uma missão. Ele explica o fluxo completo: dossiê → três decisões por ciclo → achado no Quadro do caso → evento com escolha visível → defesa da hipótese → contenção → opinião de teste. Nina, a assistente da central (`src/assets/nina-assistente.png`), aponta a próxima ação em um balão e pode rolar a tela até ela; ao indicar a equipe, os cards de personagens precisam ficar visualmente destacados e clicáveis. Mantenha os textos curtos e o direcionamento visual coerente com a etapa. Preserve esse suporte enquanto o jogo tiver mecânicas por descoberta. Em celular, o mapa não deve competir com o fluxo de decisão: a leitura do achado e o Quadro do caso têm prioridade. Todo modal, sobretudo o debriefing, deve ter rolagem utilizável em telas baixas. A tela de campanha tem mapa-múndi com marcadores em `mapPosition` de cada missão: hover, foco por teclado e toque no card devem atualizar local e marcador. O asset é `src/assets/mapa-mundi-interativo-3d.png`.
+O tutorial é apresentado no primeiro acesso e pode ser reaberto pelo botão **Como jogar**, inclusive durante uma missão. Ele explica o fluxo completo: dossiê → três decisões por ciclo → achado no Quadro do caso → evento com escolha visível → defesa da hipótese → contenção → opinião de teste. Nina, a assistente da central (`src/assets/nina-assistente.png`), aponta a próxima ação em um balão flutuante e muda de posição conforme a etapa. Fora o próprio botão de fechar, ela nunca pode capturar cliques ou toques; ao indicar a equipe, os cards de personagens precisam ficar visualmente destacados e clicáveis. Mantenha os textos curtos e o direcionamento visual coerente com a etapa. Preserve esse suporte enquanto o jogo tiver mecânicas por descoberta. Em celular, Nina deve ser compacta, fechável e ocupar espaço no fluxo ou uma zona segura: ela nunca pode encobrir o botão que o aluno deve acionar. Em celular, o mapa não deve competir com o fluxo de decisão: a leitura do achado e o Quadro do caso têm prioridade. Todo modal, sobretudo o debriefing, deve ter rolagem utilizável em telas baixas. A tela de campanha tem mapa-múndi com marcadores em `mapPosition` de cada missão: hover, foco por teclado e toque no card devem atualizar local e marcador. O asset é `src/assets/mapa-mundi-interativo-3d.png`.
 
 Os cenários usam sínteses de fontes oficiais: OMS para cólera, dengue, sarampo e tuberculose; CDC para *Candida auris*. Antes de incluir ou revisar conteúdo médico, use fontes oficiais/primárias, mantenha o link da fonte em cada missão e trate o jogo como educacional, não como orientação clínica individual.
 
@@ -53,6 +54,10 @@ npm run build
 ```
 
 O build precisa passar antes de entregar alterações. Não use dependências desnecessárias para ícones, mapas ou estado simples.
+
+## Publicação
+
+Nunca faça deploy em produção sem avisar o usuário e receber uma confirmação explícita para essa publicação. O usuário é responsável pelo `push` no Git e pelo deploy no Coolify. Antes de qualquer publicação, as alterações devem ser testadas no ambiente de desenvolvimento local e apresentadas para revisão.
 
 ## Deploy no Coolify
 

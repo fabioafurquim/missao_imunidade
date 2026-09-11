@@ -23,6 +23,8 @@ Jogo educativo, em português do Brasil, sobre investigação e controle de surt
 - Missão diária rotativa: um alerta reutiliza um dossiê com contexto e objetivo próprios; a primeira conclusão do dia concede +80 XP, +15 moedas e alimenta a sequência de acessos.
 - Todos os dossiês incluem uma cena operacional, uma prioridade visível antes do diagnóstico, recursos limitados e exame de laboratório que consome dois recursos e chega no ciclo seguinte.
 - Quando Nina indica as missões da equipe, os quatro cards clicáveis pulsam com uma seta visual até o jogador tomar a primeira decisão.
+- A campanha destaca uma única etapa por vez — proteger, investigar, decidir e controlar — com orientações visuais da Nina. Desafios cronometrados só serão usados em decisões específicas que expliquem o motivo, o impacto e a recompensa antes de começarem.
+- Os cinco dossiês usam o mesmo roteiro visual, com cenas de campo e falas contextuais dos quatro profissionais para cada etapa.
 - Partidas em andamento são retomadas no mesmo navegador após recarregar a página; o dossiê concluído abre o debriefing e não mantém instruções de investigação ao fundo.
 
 | Dossiê | Cenário | Foco didático |
@@ -88,6 +90,8 @@ O script atualiza o `docker-compose.yaml` gerado pelo Coolify, recria somente o 
 Foi escolhido **React + Vite + TypeScript**, servido por Nginx em produção. É uma estrutura pequena, amplamente conhecida e fácil de continuar pelos estudantes. Quando houver necessidade de progresso entre sessões, a evolução natural é uma API TypeScript e PostgreSQL, sem precisar reescrever a interface.
 
 ## Próxima etapa sugerida
+
+O direcionamento aprovado para a próxima fase está em [docs/plano-norte-experiencia-jogo.md](docs/plano-norte-experiencia-jogo.md). Ele propõe transformar o piloto em uma aventura visual de investigação médica antes de expandir a nova dinâmica aos demais casos.
 
 1. Conduzir teste de usabilidade com estudantes usando o formulário local e consolidar os resumos copiados;
 2. Criar mais eventos por missão, com escolhas de resposta e consequências justificadas, e ampliar a diversidade de diferenciais;
