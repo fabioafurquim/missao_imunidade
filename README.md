@@ -107,3 +107,9 @@ O direcionamento aprovado para a próxima fase está em [docs/plano-norte-experi
 3. Criar banco de questões revisado por docentes, com referências por afirmação e dificuldade calibrada por semestre;
 4. Persistir usuários, partidas, decisões e progresso com API TypeScript e PostgreSQL, após definir consentimento e privacidade;
 5. Adicionar autenticação, placar e retomada de partidas.
+
+## Identidade de jogador e acompanhamento
+
+A identidade v2 substitui os identificadores antigos. No primeiro acesso após a atualização, o navegador solicita um novo perfil e gera um código no formato `MISSAO-XXXX-XXXX-XXXX`. O estudante guarda esse código e pode informá-lo em outro navegador para reunir XP, melhor pontuação, partidas e dossiês concluídos na mesma identidade.
+
+A primeira inicialização desta versão remove os Recordes anteriores uma única vez, por decisão de produto, e registra a migração em `game_schema_migrations`. A aplicação passa a registrar também data de criação, última partida e último dossiê. A rota de Recordes entrega uma lista de até 30 participantes para o painel expansível.

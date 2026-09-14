@@ -26,3 +26,9 @@ Na inicialização, a aplicação também cria as colunas de recordes `best_scor
 ## Dados armazenados
 
 `game_profiles` contém um identificador aleatório criado pelo navegador, nome de exibição, XP, moedas, ids de dossiês concluídos e estado da missão diária. Semestre, foco de estudo e opinião de teste não são enviados à API.
+
+## Identidade de jogador e acompanhamento
+
+A identidade v2 substitui os identificadores antigos. No primeiro acesso após a atualização, o navegador solicita um novo perfil e gera um código no formato `MISSAO-XXXX-XXXX-XXXX`. O estudante guarda esse código e pode informá-lo em outro navegador para reunir XP, melhor pontuação, partidas e dossiês concluídos na mesma identidade.
+
+A primeira inicialização desta versão remove os Recordes anteriores uma única vez, por decisão de produto, e registra a migração em `game_schema_migrations`. A aplicação passa a registrar também data de criação, última partida e último dossiê. A rota de Recordes entrega uma lista de até 30 participantes para o painel expansível.
