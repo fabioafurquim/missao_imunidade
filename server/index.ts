@@ -16,7 +16,16 @@ const loadLocalEnvironment = () => {
 
 loadLocalEnvironment()
 
-type Progress = { playerId: string; xp: number; coins: number; completed: number[]; dailyClaimed: string; lastActiveDay: string; streak: number; bestScore: number }
+const rewards = {
+  central: { price: 0, level: 1 },
+  vigilante: { price: 30, level: 2 },
+  estrategista: { price: 60, level: 3 },
+  campo: { price: 90, level: 4 },
+  aurora: { price: 140, level: 5 },
+} as const
+
+type RewardId = keyof typeof rewards
+type Progress = { playerId: string; xp: number; coins: number; completed: number[]; dailyClaimed: string; lastActiveDay: string; streak: number; bestScore: number; inventory: string[]; equippedStyle: string }
 
 const port = Number(process.env.PORT || 80)
 const dist = join(process.cwd(), 'dist')
@@ -31,7 +40,7 @@ const respondJson = (response: ServerResponse, status: number, value: unknown) =
 const validProgress = (value: unknown): value is Progress => {
   if (!value || typeof value !== 'object') return false
   const item = value as Progress
-  return /^[a-zA-Z0-9-]{16,80}$/.test(item.playerId) && Number.isInteger(item.xp) && item.xp >= 0 && Number.isInteger(item.coins) && item.coins >= 0 && Array.isArray(item.completed) && item.completed.every((id) => Number.isInteger(id) && id > 0 && id <= 99) && typeof item.dailyClaimed === 'string' && /^$|^\d{4}-\d{2}-\d{2}$/.test(item.dailyClaimed) && typeof item.lastActiveDay === 'string' && /^$|^\d{4}-\d{2}-\d{2}$/.test(item.lastActiveDay) && Number.isInteger(item.streak) && item.streak >= 0 && item.streak <= 9999 && Number.isInteger(item.bestScore) && item.bestScore >= 0
+  return /^[a-zA-Z0-9-]{16,80}$/.test(item.playerId) && Number.isInteger(item.xp) && item.xp >= 0 && Number.isInteger(item.coins) && item.coins >= 0 && Array.isArray(item.completed) && item.completed.every((id) => Number.isInteger(id) && id > 0 && id <= 99) && typeof item.dailyClaimed === 'string' && /^$|^\d{4}-\d{2}-\d{2}$/.test(item.dailyClaimed) && typeof item.lastActiveDay === 'string' && /^$|^\d{4}-\d{2}-\d{2}$/.test(item.lastActiveDay) && Number.isInteger(item.streak) && item.streak >= 0 && item.streak <= 9999 && Number.isInteger(item.bestScore) && item.bestScore >= 0 && Array.isArray(item.inventory) && item.inventory.every((id) => typeof id === 'string' && id in rewards) && typeof item.equippedStyle === 'string' && item.equippedStyle in rewards
 }
 
 const readBody = async (request: IncomingMessage) => new Promise<unknown>((resolve, reject) => {
@@ -48,6 +57,8 @@ const initDatabase = async () => {
       player_id TEXT PRIMARY KEY,
       xp INTEGER NOT NULL DEFAULT 0 CHECK (xp >= 0),
       coins INTEGER NOT NULL DEFAULT 0 CHECK (coins >= 0),
+      inventory JSONB NOT NULL DEFAULT '["central"]'::jsonb,
+      equipped_style TEXT NOT NULL DEFAULT 'central',
       completed JSONB NOT NULL DEFAULT '[]'::jsonb,
       daily_claimed TEXT NOT NULL DEFAULT '',
       last_active_day TEXT NOT NULL DEFAULT '',
@@ -73,6 +84,8 @@ const initDatabase = async () => {
     await pool.query('ALTER TABLE game_profiles ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()')
     await pool.query('ALTER TABLE game_profiles ADD COLUMN IF NOT EXISTS last_played_at TIMESTAMPTZ')
     await pool.query('ALTER TABLE game_profiles ADD COLUMN IF NOT EXISTS last_mission_id INTEGER')
+    await pool.query("ALTER TABLE game_profiles ADD COLUMN IF NOT EXISTS inventory JSONB NOT NULL DEFAULT '[\"central\"]'::jsonb")
+    await pool.query("ALTER TABLE game_profiles ADD COLUMN IF NOT EXISTS equipped_style TEXT NOT NULL DEFAULT 'central'")
     const identityReset = await pool.query("SELECT 1 FROM game_schema_migrations WHERE key = 'identity-v2-reset'")
     if (!identityReset.rowCount) {
       await pool.query('DELETE FROM game_profiles')
@@ -102,17 +115,17 @@ createServer(async (request, response) => {
     const match = path.match(/^\/api\/progress\/([a-zA-Z0-9-]{16,80})$/)
     if (match && request.method === 'GET') {
       if (!databaseReady || !pool) return respondJson(response, 503, { error: 'Persistência ainda não configurada.' })
-      const result = await pool.query('SELECT player_id AS "playerId", xp, coins, completed, daily_claimed AS "dailyClaimed", last_active_day AS "lastActiveDay", streak, best_score AS "bestScore" FROM game_profiles WHERE player_id = $1', [match[1]])
+      const result = await pool.query('SELECT player_id AS "playerId", xp, coins, completed, daily_claimed AS "dailyClaimed", last_active_day AS "lastActiveDay", streak, best_score AS "bestScore", inventory, equipped_style AS "equippedStyle" FROM game_profiles WHERE player_id = $1', [match[1]])
       return respondJson(response, 200, result.rows[0] || null)
     }
     if (path === '/api/progress' && request.method === 'PUT') {
       const progress = await readBody(request)
       if (!validProgress(progress)) return respondJson(response, 400, { error: 'Progresso inválido.' })
       if (!databaseReady || !pool) return respondJson(response, 503, { error: 'Persistência ainda não configurada.' })
-      const result = await pool.query(`INSERT INTO game_profiles (player_id, xp, coins, completed, daily_claimed, last_active_day, streak, best_score)
-        VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7, $8)
-        ON CONFLICT (player_id) DO UPDATE SET xp = GREATEST(game_profiles.xp, EXCLUDED.xp), coins = GREATEST(game_profiles.coins, EXCLUDED.coins), completed = EXCLUDED.completed, daily_claimed = EXCLUDED.daily_claimed, last_active_day = EXCLUDED.last_active_day, streak = GREATEST(game_profiles.streak, EXCLUDED.streak), best_score = GREATEST(game_profiles.best_score, EXCLUDED.best_score), updated_at = NOW()
-        RETURNING player_id AS "playerId", xp, coins, completed, daily_claimed AS "dailyClaimed", last_active_day AS "lastActiveDay", streak, best_score AS "bestScore"`, [progress.playerId, progress.xp, progress.coins, JSON.stringify([...new Set(progress.completed)].sort()), progress.dailyClaimed, progress.lastActiveDay, progress.streak, progress.bestScore])
+      const result = await pool.query(`INSERT INTO game_profiles (player_id, xp, coins, completed, daily_claimed, last_active_day, streak, best_score, inventory, equipped_style)
+        VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7, $8, $9::jsonb, $10)
+        ON CONFLICT (player_id) DO UPDATE SET xp = GREATEST(game_profiles.xp, EXCLUDED.xp), coins = EXCLUDED.coins, completed = EXCLUDED.completed, daily_claimed = EXCLUDED.daily_claimed, last_active_day = EXCLUDED.last_active_day, streak = GREATEST(game_profiles.streak, EXCLUDED.streak), best_score = GREATEST(game_profiles.best_score, EXCLUDED.best_score), inventory = EXCLUDED.inventory, equipped_style = EXCLUDED.equipped_style, updated_at = NOW()
+        RETURNING player_id AS "playerId", xp, coins, completed, daily_claimed AS "dailyClaimed", last_active_day AS "lastActiveDay", streak, best_score AS "bestScore", inventory, equipped_style AS "equippedStyle"`, [progress.playerId, progress.xp, progress.coins, JSON.stringify([...new Set(progress.completed)].sort()), progress.dailyClaimed, progress.lastActiveDay, progress.streak, progress.bestScore, JSON.stringify([...new Set(['central', ...progress.inventory])]), progress.inventory.includes(progress.equippedStyle) ? progress.equippedStyle : 'central'])
       return respondJson(response, 200, result.rows[0])
     }
     if (path === '/api/plays' && request.method === 'POST') {
@@ -136,6 +149,31 @@ createServer(async (request, response) => {
       await pool.query(`INSERT INTO game_profiles (player_id, display_name) VALUES ($1, $2)
         ON CONFLICT (player_id) DO UPDATE SET display_name = EXCLUDED.display_name, updated_at = NOW()`, [playerId, normalizedName])
       return respondJson(response, 204, null)
+    }
+    if ((path === '/api/rewards/purchase' || path === '/api/rewards/equip') && request.method === 'POST') {
+      const value = await readBody(request)
+      const playerId = value && typeof value === 'object' ? (value as { playerId?: unknown }).playerId : null
+      const itemId = value && typeof value === 'object' ? (value as { itemId?: unknown }).itemId : null
+      if (typeof playerId !== 'string' || !/^[a-zA-Z0-9-]{16,80}$/.test(playerId) || typeof itemId !== 'string' || !(itemId in rewards)) return respondJson(response, 400, { error: 'Item de personalização inválido.' })
+      if (!databaseReady || !pool) return respondJson(response, 503, { error: 'Persistência ainda não configurada.' })
+      const rewardId = itemId as RewardId
+      const profile = await pool.query('SELECT xp, coins, inventory FROM game_profiles WHERE player_id = $1', [playerId])
+      if (!profile.rowCount) return respondJson(response, 404, { error: 'Perfil ainda não encontrado. Jogue uma missão e tente novamente.' })
+      const current = profile.rows[0] as { xp: number; coins: number; inventory: string[] }
+      const inventory = Array.isArray(current.inventory) ? current.inventory : ['central']
+      if (path === '/api/rewards/purchase') {
+        if (inventory.includes(rewardId)) return respondJson(response, 200, { coins: current.coins, inventory, equippedStyle: rewardId, message: 'Este emblema já pertence à sua central.' })
+        const reward = rewards[rewardId]
+        if (Math.floor(current.xp / 700) + 1 < reward.level) return respondJson(response, 409, { error: `Este emblema pede o nível ${reward.level}.` })
+        if (current.coins < reward.price) return respondJson(response, 409, { error: 'Ainda faltam moedas para este emblema.' })
+        const updated = await pool.query(`UPDATE game_profiles SET coins = coins - $2, inventory = inventory || jsonb_build_array($3::text), equipped_style = $3, updated_at = NOW()
+          WHERE player_id = $1 AND coins >= $2 RETURNING coins, inventory, equipped_style AS "equippedStyle"`, [playerId, reward.price, rewardId])
+        if (!updated.rowCount) return respondJson(response, 409, { error: 'As moedas mudaram. Atualize a central e tente novamente.' })
+        return respondJson(response, 200, { ...updated.rows[0], message: `${rewardId === 'central' ? 'Emblema equipado.' : 'Novo emblema desbloqueado.'}` })
+      }
+      if (!inventory.includes(rewardId)) return respondJson(response, 409, { error: 'Este emblema ainda não foi desbloqueado.' })
+      const updated = await pool.query('UPDATE game_profiles SET equipped_style = $2, updated_at = NOW() WHERE player_id = $1 RETURNING coins, inventory, equipped_style AS "equippedStyle"', [playerId, rewardId])
+      return respondJson(response, 200, { ...updated.rows[0], message: 'Emblema equipado na central.' })
     }
     if (path === '/api/records' && request.method === 'GET') {
       if (!databaseReady || !pool) return respondJson(response, 503, { error: 'Recordes ainda não configurados.' })

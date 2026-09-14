@@ -82,6 +82,10 @@ O projeto possui um `Dockerfile` multiestágio. Em produção, um servidor Node 
 
 Para ativar persistência entre dispositivos, configure `DATABASE_URL` com a conexão PostgreSQL no Coolify. A aplicação cria a tabela `game_profiles` na primeira conexão. Sem essa variável, continua funcionando com o progresso local do navegador.
 
+## Central de Evolução
+
+O botão **Central** reúne a progressão da equipe: nível, XP, moedas, conquistas e emblemas visuais. As moedas desbloqueiam apenas personalizações da central. Nenhuma investigação, exame ou conduta clínica é bloqueada por nível ou moeda.
+
 O procedimento seguro para configurar e verificar o PostgreSQL está em [docs/postgres-producao.md](docs/postgres-producao.md). Nenhuma credencial deve entrar no repositório.
 
 ### Domínio personalizado no Coolify
