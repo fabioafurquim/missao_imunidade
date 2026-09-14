@@ -21,6 +21,8 @@ npm run verify:postgres
 
 O comando só confirma a conexão e as colunas esperadas; ele não altera perfis. A rota `GET /api/health` deve responder `{"ok":true,"persistence":"postgres"}`.
 
+Na inicialização, a aplicação também cria as colunas de recordes `best_score`, `plays` e `display_name` quando ainda não existirem. O painel mostra o nome de exibição informado no perfil, com aviso visível antes do início do jogo.
+
 ## Dados armazenados
 
-`game_profiles` contém apenas um identificador aleatório criado pelo navegador, XP, moedas, ids de dossiês concluídos e estado da missão diária. Nome, semestre, foco de estudo e opinião de teste não são enviados à API.
+`game_profiles` contém um identificador aleatório criado pelo navegador, nome de exibição, XP, moedas, ids de dossiês concluídos e estado da missão diária. Semestre, foco de estudo e opinião de teste não são enviados à API.

@@ -4,7 +4,7 @@ Jogo educativo, em português do Brasil, sobre investigação e controle de surt
 
 ## O que já funciona
 
-- Tela inicial com nome, semestre e eixo de estudo do aluno; os dados ficam apenas no navegador;
+- Tela inicial com nome de exibição, semestre e eixo de estudo; o nome escolhido aparece no ranking da turma e os demais dados ficam apenas no navegador;
 - Tutorial automático no primeiro acesso e botão **Como jogar** também durante a missão; o guia detalha os oito passos, do dossiê ao feedback final;
 - Mapa de dossiês com agentes ocultos, desbloqueio progressivo e modo de teste para explorar todas as fases;
 - Mapa-múndi interativo: hover, foco por teclado ou toque em um dossiê atualiza o marcador e a localização exibida;
@@ -19,12 +19,17 @@ Jogo educativo, em português do Brasil, sobre investigação e controle de surt
 - Medidas de resposta específicas, perguntas de discussão por cenário, debriefing, pontuação, aprendizados e links para fontes oficiais.
 - Formulário de opinião no debriefing para testes: guarda a avaliação localmente e copia um resumo para o estudante encaminhar à equipe, sem envio de dados ou conta.
 - Perfil de jogador anônimo: cada navegador recebe XP, nível, moedas e desbloqueios; a primeira conclusão de cada dossiê concede recompensa.
+- Ao concluir um episódio, a tela final detalha XP e moedas recebidos, incluindo bônus de primeira conclusão, missão diária e agilidade quando aplicável.
 - Nina, a assistente visual da central, aponta a próxima ação com balões, animação e destaque; o jogador pode tocar no balão para ir até ela.
 - Missão diária rotativa: um alerta reutiliza um dossiê com contexto e objetivo próprios; a primeira conclusão do dia concede +80 XP, +15 moedas e alimenta a sequência de acessos.
 - Todos os dossiês incluem uma cena operacional, uma prioridade visível antes do diagnóstico, recursos limitados e exame de laboratório que consome dois recursos e chega no ciclo seguinte.
 - Quando Nina indica as missões da equipe, os quatro cards clicáveis pulsam com uma seta visual até o jogador tomar a primeira decisão.
 - A campanha destaca uma única etapa por vez — proteger, investigar, decidir e controlar — com orientações visuais da Nina. Desafios cronometrados só serão usados em decisões específicas que expliquem o motivo, o impacto e a recompensa antes de começarem.
 - Os cinco dossiês usam o mesmo roteiro visual, com cenas de campo e falas contextuais dos quatro profissionais para cada etapa.
+- Os cinco dossiês usam a nova estrutura de episódio: chamado, cena de campo, primeira ordem, exploração do território, cartas de evidência, defesa e resposta visual.
+- A campanha foi ampliada com Vale Safira (malária), Instituto Ponte (meningite meningocócica) e Ilha Aurora (hepatite A), cada qual com cenário, pistas, diferenciais e resposta próprios.
+- Distrito Alvorada possui três variações sorteadas — dengue, Zika e chikungunya — para que uma nova partida apresente hipóteses, pistas e prioridades diferentes no mesmo território.
+- A etapa de resposta oferece uma ampulheta opcional: aplicar uma medida prioritária dentro do prazo rende XP adicional, mas o jogo não bloqueia escolhas ao fim da contagem.
 - Partidas em andamento são retomadas no mesmo navegador após recarregar a página; o dossiê concluído abre o debriefing e não mantém instruções de investigação ao fundo.
 
 | Dossiê | Cenário | Foco didático |
@@ -52,15 +57,19 @@ Abra o endereço informado pelo Vite (normalmente `http://localhost:5173`). Para
 npm run build
 ```
 
+Para testar persistência e **Recordes** localmente, crie `.env.local` apenas na sua máquina com `PORT=3001` e a `DATABASE_URL` do PostgreSQL de desenvolvimento. Em dois terminais, execute `npm run dev:api` e `npm run dev`. O Vite encaminha chamadas `/api` para a API local.
+
 ## Onde editar as missões
 
-As fases e o conteúdo revisável estão concentrados em `src/data/missions.ts`. Cada caso define briefing, coordenadas do marcador no mapa, dados iniciais, duas evidências por médico, diferenciais, pergunta de justificativa, intervenções, critérios mínimos de vitória, aprendizados e fonte oficial. O diagnóstico verdadeiro não deve aparecer em títulos, cards de campanha, briefings ou enunciados da justificativa; a interface só o revela após uma defesa correta ou no debriefing.
+As fases e o conteúdo revisável estão concentrados em `src/data/missions.ts` e `src/data/expansion-missions.ts`. Cada caso define briefing, coordenadas do marcador no mapa, dados iniciais, evidências, diferenciais, pergunta de justificativa, intervenções, critérios mínimos de vitória, aprendizados e fonte oficial. O diagnóstico verdadeiro não deve aparecer em títulos, cards de campanha, briefings ou enunciados da justificativa; a interface só o revela após uma defesa correta ou no debriefing.
 
-A interface e a lógica da campanha ficam em `src/main.tsx`. O perfil inicial usa `localStorage` somente para manter nome, semestre e foco de estudo no navegador do aluno; não há login, cadastro ou coleta de dados pessoais pela API de progresso.
+A interface e a lógica da campanha ficam em `src/main.tsx`. O perfil inicial usa `localStorage` para manter nome, semestre e foco de estudo no navegador. Com o aviso visível no formulário, apenas o nome de exibição escolhido é enviado à API para aparecer no ranking; não há login, senha ou coleta de semestre e foco de estudo.
 
 A interface é mobile-first: no celular, o estado do ciclo fica fixo no topo, o mapa não compete com a investigação e cada achado abre como painel de leitura antes de o jogador continuar. O Quadro do caso aparece logo após as escolhas da equipe, com botões de toque ampliados. Todos os modais, inclusive o debriefing, possuem rolagem segura em telas baixas.
 
 Recursos, resultados pendentes, score, decisões e desempenho por competências da partida em andamento ficam em `localStorage` para permitir retomada no mesmo navegador. XP, moedas, missões concluídas e o resgate da missão diária ficam em `localStorage` e, quando `DATABASE_URL` estiver configurada, também são enviados para PostgreSQL pela API própria. O identificador é anônimo e gerado no navegador; não há login, senha nem cadastro. As opiniões de teste continuam somente em `localStorage`.
+
+O botão **Recordes** mostra dados agregados da central e rankings de melhor pontuação, XP e partidas iniciadas. O banco guarda um identificador técnico, o nome de exibição informado com aviso no perfil, melhor pontuação e contagem de partidas. E-mail, senha, semestre e foco de estudo não são enviados ao ranking.
 
 ## Publicar no Coolify
 

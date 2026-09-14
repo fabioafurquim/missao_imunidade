@@ -65,13 +65,37 @@ As mecânicas precisam ser revisadas por docentes antes de entrarem em produçã
 
 - XP reconhece objetivos e raciocínio demonstrado; o resultado precisa explicar ganhos e perdas.
 - Moedas devem servir para elementos cosméticos, acessórios, avatar e base da equipe.
+- O desfecho mostra XP e moedas recebidos, separando primeira conclusão, missão diária e bônus de agilidade.
 - Não bloquear opções clínicas necessárias por moedas ou nível.
 - Criar coleção de casos resolvidos e selos ligados a competências praticadas.
 - Manter a missão diária como retorno opcional, com objetivo e recompensa claros.
 
+## Comunidade, recordes e privacidade
+
+- A central de recordes mostra atividade coletiva e rankings de melhor pontuação, XP e partidas iniciadas.
+- Cada participante aparece somente como um código anônimo gerado no navegador; o ranking não usa nome, e-mail nem matrícula.
+- O PostgreSQL registra total de partidas, melhor pontuação e progresso agregado. Esses dados permitem acompanhar adesão e engajamento sem transformar o perfil didático em cadastro.
+- Login com Google fica para uma etapa posterior, após definição de consentimento, política de privacidade, finalidade dos dados e fluxo de exclusão de conta. Não é necessário para a experiência atual.
+
+## Rejogabilidade e biblioteca de doenças
+
+A planilha `docs/referencias/doencas-jogo.xlsx` é a matriz inicial de autoria: reúne 30 doenças transmissíveis, transmissão, sintomas-chave, prevenção, tratamento e distribuição. Ela não substitui a revisão por fontes oficiais e docentes antes de cada caso entrar no jogo.
+
+- Um dossiê variável mantém um núcleo didático obrigatório — padrão clínico, exposição, exame e medidas essenciais — e sorteia contexto, ordem de pistas, diferenciais e eventos sem retirar a possibilidade de raciocinar corretamente.
+- Distrito Alvorada inaugura o modelo com três cenários: dengue, Zika e chikungunya. O território permanece reconhecível, mas mudam o padrão predominante, a hipótese, as cartas de evidência e as prioridades de resposta.
+- A resposta tem uma ampulheta opcional: aplicar uma medida prioritária dentro do prazo concede XP adicional; o fim do prazo não bloqueia escolhas nem penaliza leitura.
+- Acertos de prioridade recebem uma celebração visual curta. Animações devem sempre comunicar conquista, progresso ou mudança de cenário.
+
 ## Tempo e desafio
 
 A investigação regular não terá contagem regressiva contínua. Futuras provas de tempo devem ser desafios opcionais e anunciados antes de começar, explicando propósito, prazo, impacto e recompensa. O tempo não deve punir leitura, acessibilidade ou uma pausa fora do jogo.
+
+## Conteúdo e rejogabilidade
+
+- Cada dossiê pode receber variações persistentes por partida: a escolha ocorre no início e não muda ao recarregar.
+- Distrito Alvorada já alterna dengue, Zika e chikungunya. As próximas variações devem trocar padrão clínico, pistas, diferenciais, prioridades e desfecho, preservando a identidade do cenário.
+- A campanha agora inclui três novos episódios inspirados na planilha recebida: Vale Safira (malária), Instituto Ponte (meningite meningocócica) e Ilha Aurora (hepatite A). Eles foram construídos com fontes da OMS e precisam de revisão docente antes de produção.
+- A expansão futura deve priorizar doenças da planilha que ofereçam uma mecânica própria, como cronologia de viagem, rede de contatos, fonte comum, ambiente, vetor ou fluxo hospitalar.
 
 ## Roteiro de implementação
 
@@ -82,6 +106,21 @@ A investigação regular não terá contagem regressiva contínua. Futuras prova
 5. Ajustar ritmo, legibilidade e recompensas com base nos testes.
 6. Adaptar o modelo aos outros quatro casos, preservando uma interação característica para cada um.
 7. Acrescentar personalização, desafios opcionais e conteúdo revisado por docentes.
+8. Revisar os novos episódios com docentes e criar uma segunda variação para cada cenário.
+8. Avaliar, com a equipe docente e de privacidade, se autenticação opcional e identificação visível no ranking trazem benefício real para a turma.
+
+## Progresso da implementação
+
+- Concluído: Porto de Mahan passou a ter o episódio piloto com chamado, cena de campo, primeira ordem, mapa de exploração, cartas de evidência, mesa de investigação, resposta em campo e desfecho visual.
+- Concluído: a estrutura do episódio foi adaptada aos cinco dossiês, com textos de orientação, perguntas de exploração e locais próprios para Distrito Alvorada, Campus Norte, Pavilhão 7 e UTI Aurora.
+- Concluído: foram criadas cinco artes próprias de mapa explorável, com marcadores em HTML para que o jogador escolha cada investigação diretamente sobre o cenário.
+- Concluído: Distrito Alvorada ganhou três variações sorteadas para rejogabilidade (dengue, Zika e chikungunya), com conteúdo e fontes específicas.
+- Concluído: a resposta passou a oferecer bônus opcional de agilidade e celebração visual ao acionar uma prioridade dentro do prazo.
+- Concluído: foi criado o painel Recordes, com agregados de jogadores, atividade mensal, partidas, dossiês concluídos e rankings anônimos por pontuação, XP e partidas.
+- Concluído: PostgreSQL passou a registrar melhor pontuação e partidas iniciadas, com migração automática de esquema na inicialização.
+- Concluído: a partida do piloto deriva a tela correta ao ser retomada no navegador.
+- Em validação: clareza da jornada e interesse dos estudantes durante os testes de usabilidade.
+- Pendente: separar as regras da partida das telas legadas de forma mais ampla e aplicar o modelo aos outros quatro dossiês.
 
 ## Critérios para aprovar o piloto
 
@@ -90,4 +129,3 @@ A investigação regular não terá contagem regressiva contínua. Futuras prova
 - O jogador consegue relatar o que mudou depois de uma decisão.
 - O celular permite concluir toda a missão sem controles encobertos ou textos inacessíveis.
 - Ao terminar, o jogador demonstra vontade de abrir outro caso.
-

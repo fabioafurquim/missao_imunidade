@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --config vite.config.ts",
+    "dev:api": "npm run build:server && node server-dist/index.js",
     "build": "tsc --noEmit && vite build",
     "build:server": "tsc -p tsconfig.server.json",
     "verify:postgres": "node scripts/verify-postgres.mjs",
