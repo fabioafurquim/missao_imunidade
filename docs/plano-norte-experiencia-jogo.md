@@ -6,6 +6,8 @@ Transformar a Missão Imunidade em uma aventura visual de investigação médica
 
 O objetivo didático permanece: praticar observação, raciocínio clínico, microbiologia, epidemiologia e saúde pública por meio de decisões explicáveis. O diagnóstico deve continuar oculto até uma defesa devidamente sustentada.
 
+A revisão de rumo aprovada para a próxima fase está detalhada em [revisao-de-rumo-campanha-visual.md](revisao-de-rumo-campanha-visual.md). Ela amplia este norte com navegação pelo mapa, consequências que permitem aprender com o erro, consulta às etapas anteriores, biblioteca opcional de doenças e campanha em capítulos.
+
 ## Problema que este plano resolve
 
 A versão atual já possui cenários, personagens, indicadores, recursos, XP e consequências. Ainda assim, a interação predominante é clicar em um cartão, ler uma informação e seguir para o próximo cartão. Muitos elementos de orientação competem pela atenção, os cenários têm pouca influência direta sobre a ação e as recompensas aparecem tarde.
@@ -15,6 +17,10 @@ A versão atual já possui cenários, personagens, indicadores, recursos, XP e c
 Cada caso deve seguir um ciclo simples e perceptível:
 
 **Explorar → descobrir → escolher → ver a consequência → conquistar → avançar.**
+
+A campanha também passa a seguir um ciclo maior:
+
+**Receber alerta → atuar no território → controlar o surto → transformar o mapa → liberar um novo capítulo.**
 
 O primeiro caso é o piloto da nova linguagem. A campanha será expandida somente depois de o piloto ser compreensível e divertido para quem o testa sem ajuda.
 
@@ -32,11 +38,12 @@ O primeiro caso é o piloto da nova linguagem. A campanha será expandida soment
 
 | Tela | Papel no jogo |
 | --- | --- |
-| Base da equipe | Escolher missão, acompanhar evolução e personalizar o avatar e a central. |
+| Base da equipe | Escolher missões diretamente no mapa, acompanhar territórios, evolução e personalização. |
 | Cena de campo | Observar, conversar, agir e acompanhar consequências imediatas. |
 | Mapa local | Escolher o próximo lugar de investigação ou intervenção. |
 | Mesa de investigação | Organizar pistas e defender hipótese. |
 | Resultado | Celebrar, compreender a partida e avançar. |
+| Biblioteca médica | Abrir, opcionalmente e após o diagnóstico, curiosidades e informações revisadas sobre a doença. |
 
 Em celular, cada tela deve ter uma ação principal evidente. Informações adicionais permanecem disponíveis sob demanda, sem competir com o próximo passo.
 
@@ -48,6 +55,9 @@ Em celular, cada tela deve ter uma ação principal evidente. Informações adic
 - A Nina ensina um gesto novo, responde quando chamada e comenta momentos importantes. Ela pode ser fechada e nunca encobre uma ação necessária.
 - Só o próximo objetivo recebe destaque. Vários elementos piscando ao mesmo tempo devem ser evitados.
 - Oferecer redução de movimento e preservar navegação por teclado e toque.
+- Etapas já visitadas podem ser revistas como diário de bordo, sem desfazer decisões ou devolver recursos.
+- O mapa deve mostrar estados claros de alerta, operação e território controlado. “Imunizado” só pode ser usado quando imunização realmente fizer parte da resposta.
+- Uma escolha inadequada pode seguir adiante e gerar consequência, mas a explicação completa fica no debriefing para não revelar a solução durante a investigação.
 
 ## Identidade dos cinco casos
 
@@ -69,11 +79,13 @@ As mecânicas precisam ser revisadas por docentes antes de entrarem em produçã
 - Não bloquear opções clínicas necessárias por moedas ou nível.
 - Criar coleção de casos resolvidos e selos ligados a competências praticadas.
 - Manter a missão diária como retorno opcional, com objetivo e recompensa claros.
+- Separar XP de missão, XP de domínio, moedas de resposta e bônus opcionais. O erro reduz a parcela ligada ao domínio; não apaga todo o progresso de aprendizagem.
+- A Central de Evolução já oferece títulos, conquistas e emblemas cosméticos adquiridos com moedas, sem bloquear conteúdo clínico.
 
 ## Comunidade, recordes e privacidade
 
 - A central de recordes mostra atividade coletiva e rankings de melhor pontuação, XP e partidas iniciadas.
-- Cada participante aparece somente como um código anônimo gerado no navegador; o ranking não usa nome, e-mail nem matrícula.
+- Cada participante aparece pelo nome de exibição informado com aviso no perfil e usa um código recuperável para consolidar partidas. O sistema não guarda e-mail, senha, semestre nem matrícula.
 - O PostgreSQL registra total de partidas, melhor pontuação e progresso agregado. Esses dados permitem acompanhar adesão e engajamento sem transformar o perfil didático em cadastro.
 - Login com Google fica para uma etapa posterior, após definição de consentimento, política de privacidade, finalidade dos dados e fluxo de exclusão de conta. Não é necessário para a experiência atual.
 
@@ -107,20 +119,26 @@ A investigação regular não terá contagem regressiva contínua. Futuras prova
 6. Adaptar o modelo aos outros quatro casos, preservando uma interação característica para cada um.
 7. Acrescentar personalização, desafios opcionais e conteúdo revisado por docentes.
 8. Revisar os novos episódios com docentes e criar uma segunda variação para cada cenário.
-8. Avaliar, com a equipe docente e de privacidade, se autenticação opcional e identificação visível no ranking trazem benefício real para a turma.
+9. Permitir rever etapas concluídas e criar a biblioteca opcional **Conheça a doença**.
+10. Testar em Porto de Mahan decisões que continuam após o erro, com consequência imediata e explicação no resultado.
+11. Transformar o mapa na interface principal da campanha, incluindo estados dos territórios e sinal da missão diária.
+12. Encerrar as oito missões como Capítulo 1 e liberar a estrutura do Capítulo 2.
+13. Avaliar, com a equipe docente e de privacidade, se autenticação opcional traz benefício real para a turma.
 
 ## Progresso da implementação
 
 - Concluído: Porto de Mahan passou a ter o episódio piloto com chamado, cena de campo, primeira ordem, mapa de exploração, cartas de evidência, mesa de investigação, resposta em campo e desfecho visual.
-- Concluído: a estrutura do episódio foi adaptada aos cinco dossiês, com textos de orientação, perguntas de exploração e locais próprios para Distrito Alvorada, Campus Norte, Pavilhão 7 e UTI Aurora.
-- Concluído: foram criadas cinco artes próprias de mapa explorável, com marcadores em HTML para que o jogador escolha cada investigação diretamente sobre o cenário.
+- Concluído: a estrutura visual de episódio foi adaptada aos oito dossiês, com chamado, campo, exploração, pistas, defesa, resposta e resultado.
+- Concluído: foram criadas artes próprias de mapa explorável, com marcadores em HTML para que o jogador escolha cada investigação diretamente sobre o cenário.
 - Concluído: Distrito Alvorada ganhou três variações sorteadas para rejogabilidade (dengue, Zika e chikungunya), com conteúdo e fontes específicas.
 - Concluído: a resposta passou a oferecer bônus opcional de agilidade e celebração visual ao acionar uma prioridade dentro do prazo.
-- Concluído: foi criado o painel Recordes, com agregados de jogadores, atividade mensal, partidas, dossiês concluídos e rankings anônimos por pontuação, XP e partidas.
+- Concluído: foi criado o painel Recordes, com nomes de exibição consentidos, agregados de jogadores, atividade mensal, partidas, dossiês concluídos e rankings por pontuação, XP e partidas.
 - Concluído: PostgreSQL passou a registrar melhor pontuação e partidas iniciadas, com migração automática de esquema na inicialização.
+- Concluído: a Central de Evolução passou a dar uso visual a XP e moedas por meio de títulos, conquistas e emblemas cosméticos.
 - Concluído: a partida do piloto deriva a tela correta ao ser retomada no navegador.
 - Em validação: clareza da jornada e interesse dos estudantes durante os testes de usabilidade.
-- Pendente: separar as regras da partida das telas legadas de forma mais ampla e aplicar o modelo aos outros quatro dossiês.
+- Pendente: tornar as etapas anteriores consultáveis, registrar escolhas frágeis sem bloquear o caso e explicar suas consequências no resultado.
+- Pendente: transformar o mapa na interface principal da campanha e organizar a continuidade em capítulos.
 
 ## Critérios para aprovar o piloto
 
