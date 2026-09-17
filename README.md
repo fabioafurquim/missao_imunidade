@@ -27,6 +27,10 @@ Jogo educativo, em português do Brasil, sobre investigação e controle de surt
 - A campanha destaca uma única etapa por vez — proteger, investigar, decidir e controlar — com orientações visuais da Nina. Desafios cronometrados só serão usados em decisões específicas que expliquem o motivo, o impacto e a recompensa antes de começarem.
 - Os cinco dossiês usam o mesmo roteiro visual, com cenas de campo e falas contextuais dos quatro profissionais para cada etapa.
 - Os cinco dossiês usam a nova estrutura de episódio: chamado, cena de campo, primeira ordem, exploração do território, cartas de evidência, defesa e resposta visual.
+- Cada chamado pode abrir uma história curta de uma pessoa afetada, fora das cartas de evidência. Ela humaniza o cenário sem antecipar o diagnóstico.
+- A resposta visual mostra duas prioridades e um atalho de risco: a escolha frágil aumenta os casos simulados, fica registrada para o debriefing e pode ser desfeita antes do fechamento.
+- Aplicar as prioridades abre o fechamento clínico do episódio. Só depois de sustentar hipótese e justificativa o caso é concluído; o resultado mostra o Diário da Equipe e uma aba opcional com conteúdo, aprendizados e fonte oficial.
+- A central da campanha usa o mapa como interface principal: marcadores acessíveis abrem os dossiês, territórios concluídos ficam visualmente controlados e a missão diária aparece como sinal de rádio.
 - A campanha foi ampliada com Vale Safira (malária), Instituto Ponte (meningite meningocócica) e Ilha Aurora (hepatite A), cada qual com cenário, pistas, diferenciais e resposta próprios.
 - Distrito Alvorada possui três variações sorteadas — dengue, Zika e chikungunya — para que uma nova partida apresente hipóteses, pistas e prioridades diferentes no mesmo território.
 - A etapa de resposta oferece uma ampulheta opcional: aplicar uma medida prioritária dentro do prazo rende XP adicional, mas o jogo não bloqueia escolhas ao fim da contagem.

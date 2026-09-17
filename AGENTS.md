@@ -14,6 +14,9 @@ A primeira versão navegável implementa cinco dossiês clínico-epidemiológico
 - Cada ciclo possui três decisões; cada médico entrega duas camadas de evidência, totalizando oito por caso;
 - Cada decisão abre o achado em destaque antes de adicioná-lo ao Quadro do caso, que organiza clínica, exposição, vigilância e laboratório;
 - Todos os dossiês usam o fluxo visual de episódio: chamado, cena de campo, primeira ordem, mapa explorável, mesa de evidências, defesa e resposta. Cada caso possui uma arte própria em `src/assets/*-mapa-exploracao.png` e marcadores HTML acessíveis; os textos e locais de exploração ficam na configuração `episodeScenes` em `src/main.tsx`.
+- O chamado pode incluir uma história humana breve, separada das evidências. Ela deve criar interesse sem sugerir ou revelar o diagnóstico; `patientStories` em `src/main.tsx` reúne esse conteúdo.
+- A resposta visual usa duas medidas prioritárias e um atalho de risco contextual. O atalho precisa ter consequência explícita no cenário, permanecer reversível antes do encerramento e ser registrado como escolha frágil no debriefing; não trate uma decisão inadequada como recomendação real.
+- Depois das prioridades, o episódio entra em `diagnosis`, o fechamento clínico persistido no navegador. O resultado deve apresentar Diário da Equipe, debrief e biblioteca opcional somente depois do desfecho, para preservar o diagnóstico como segredo didático durante a missão.
 - Distrito Alvorada possui variações persistidas por partida em `districtVariants`, dentro de `src/data/missions.ts`. A variação é escolhida ao iniciar o dossiê e altera evidências, hipótese, medidas e fonte; não sorteie uma nova variação durante uma partida em andamento.
 - A referência recebida da equipe está em `docs/referencias/doencas-jogo.xlsx`. Ela orienta a expansão. Vale Safira (malária), Instituto Ponte (meningite meningocócica) e Ilha Aurora (hepatite A) foram incorporados a partir dela e de fontes OMS; cada caso exige revisão docente antes de publicação.
 - O botão **Recordes** usa `GET /api/records` e mostra o nome de exibição informado no perfil, além de totais de participantes e rankings de pontuação, XP e partidas. O PostgreSQL registra `best_score`, `plays` e `display_name`. O formulário deixa explícito que o nome aparecerá no ranking; não envie semestre, foco, e-mail, senha ou opinião de teste.
@@ -80,10 +83,15 @@ Quando adicionar backend, prefira uma API TypeScript separada e variáveis de am
 
 O painel de infraestrutura deve ter acesso restrito por identidade ou por IP específico. Não amplie permissões para blocos inteiros de operadoras: IPs residenciais são dinâmicos e faixas amplas expõem o painel a terceiros. Para acesso administrativo recorrente, prefira túnel SSH, VPN privada (por exemplo, Tailscale) ou IP fixo.
 
+## Base de operações no mapa
+
+A campanha usa `CampaignMap` como base de operações principal. Marcadores precisam preservar foco por teclado, área de toque confortável e estados de alerta, bloqueio e território controlado. A ficha selecionada deve aparecer fora do ponto do mapa e, em celular, abaixo dele. Os cenários continuam simulações educativas, mesmo quando usam geografia como contexto.
+
 ## Direção visual
 
 - Interface de central de comando médica: azul-marinho, ciano/verde-água, alertas âmbar/vermelho;
 - O globo 3D é uma imagem gerada para o projeto e substitui o antigo mapa SVG abstrato;
+- A Base de Operações usa `src/assets/mapa-central-operacoes-v1.png`, com camadas HTML/CSS de radar e marcadores; mantenha texto, estados e controles fora da imagem.
 - A imagem está centrada no Sul/Sudeste Asiático e deve manter destaque visual para o foco do surto;
 - Preserve contraste, navegação por teclado e responsividade para celular;
 - Não inserir texto dentro de imagens geradas; rótulos devem permanecer em HTML/CSS.

@@ -20,6 +20,7 @@ export type Intervention = {
   tone: 'blue' | 'orange' | 'green' | 'purple'
   factor: number
   teachingNote?: string
+  isRisk?: boolean
 }
 
 export type CycleEvent = {

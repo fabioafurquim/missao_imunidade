@@ -125,7 +125,27 @@ A investigação regular não terá contagem regressiva contínua. Futuras prova
 12. Encerrar as oito missões como Capítulo 1 e liberar a estrutura do Capítulo 2.
 13. Avaliar, com a equipe docente e de privacidade, se autenticação opcional traz benefício real para a turma.
 
+## Ciclo de aprofundamento aprovado pela equipe
+
+- Em implementação: cada episódio passa a abrir com uma **história humana curta**, separada das cartas. Ela cria interesse e contexto, mas não entrega a resposta diagnóstica.
+- Em implementação: uma defesa frágil deixa de ser um bloqueio de tentativa e erro. A equipe continua em campo, a pressão do surto aumenta de forma visível e o jogador é direcionado a buscar outra lente; o debriefing explicará a lacuna e os diferenciais.
+- Em implementação: etapas já visitadas se tornarão um **diário de bordo** para consulta, sem desfazer recursos ou escolhas. A Nina oferecerá dicas contextuais em camadas, sem custo ou punição por pedir ajuda.
+- Planejado para o mesmo modelo: duas decisões de resposta entre três opções por vez, com alternativas inadequadas e consequências operacionais claras; a defesa diagnóstica ocorrerá no fechamento da missão, depois das primeiras medidas sindrômicas de proteção.
+- Planejado: o resultado exibirá uma linha do tempo de acertos, escolhas frágeis, efeito no cenário, XP de participação e XP de domínio; a aba opcional **Conheça a doença** apresentará diferenciais e porquês após o encerramento.
+- Planejado: o mapa da campanha passará a usar geografia real como contexto, deixando explícito que os episódios são simulações educativas. Marcadores e painéis devem se afastar do ponto geográfico selecionado; no celular, a ficha da missão sobe abaixo do mapa.
+
 ## Progresso da implementação
+
+- Concluído nesta etapa: Porto de Mahan recebeu uma história opcional da paciente, apresentada antes da cena de campo e fora das cartas de evidência.
+- Concluído nesta etapa: a resposta do episódio agora mostra apenas as duas prioridades e um atalho de risco. Escolher o atalho aumenta casos, marca a decisão como frágil e pode ser desfeito; escolher as duas prioridades encerra a resposta. A escolha de risco também sobrevive à retomada local da partida.
+- Concluído nesta etapa: uma defesa diagnóstica frágil gera mais pressão e abre uma nova oportunidade de investigação; após usar todas as lentes, a equipe continua para a resposta em vez de recomeçar o caso.
+- Concluído nesta etapa: aplicar as duas prioridades não encerra mais a missão automaticamente. A equipe vai para um fechamento clínico, em que a hipótese e a justificativa definem o desfecho.
+- Concluído nesta etapa: o resultado traz o Diário da Equipe, com decisões adequadas e frágeis, e uma biblioteca opcional da doença com debrief, aprendizados e fonte oficial. A tela continua rolável em telas baixas.
+- Concluído nesta etapa: a fase exata do episódio é persistida localmente, incluindo o novo fechamento clínico, para que uma recarga não devolva o jogador a uma etapa anterior.
+- Concluído nesta etapa: o cabeçalho do episódio recebeu **Dica da Nina**, uma ajuda contextual que explica o objetivo da etapa atual sem cobrar energia, punir leitura ou encobrir controles.
+- Concluído nesta etapa: o resultado explica cada hipótese alternativa e identifica o dado mais discriminativo somente após o fim do caso. Usar o atalho de risco continua permitindo aprender e concluir, mas reduz XP de domínio e moedas da primeira conclusão.
+- Concluído nesta etapa: a Base da Equipe foi transformada em mapa de operações. Os dossiês são escolhidos por marcadores de alerta, o território concluído recebe estado visual de controle e a missão diária virou um sinal no mapa. No celular, a ficha da missão fica abaixo do mapa, com áreas de toque grandes e sem depender de pontos pequenos.
+- Concluído nesta etapa: o mapa recebeu a arte `mapa-central-operacoes-v1.png` e camadas animadas de grade, varredura, radar, anéis de alerta, estado controlado e sinal diário. As animações comunicam o estado da operação e respeitam a preferência de redução de movimento.
 
 - Concluído: Porto de Mahan passou a ter o episódio piloto com chamado, cena de campo, primeira ordem, mapa de exploração, cartas de evidência, mesa de investigação, resposta em campo e desfecho visual.
 - Concluído: a estrutura visual de episódio foi adaptada aos oito dossiês, com chamado, campo, exploração, pistas, defesa, resposta e resultado.
