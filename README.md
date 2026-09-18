@@ -116,6 +116,22 @@ O direcionamento aprovado para a próxima fase está em [docs/plano-norte-experi
 4. Persistir usuários, partidas, decisões e progresso com API TypeScript e PostgreSQL, após definir consentimento e privacidade;
 5. Adicionar autenticação, placar e retomada de partidas.
 
+## Episódios visuais e dicas
+
+A Base de Operações usa um mapa interativo e os episódios apresentam chamadas de campo, sinais curtos do território, cartas de evidência e uma resposta inicial antes do diagnóstico final. Todos os oito dossiês têm histórias opcionais de pacientes ilustradas para criar contexto humano sem antecipar a resposta. A base também mostra selos de território e o progresso visual do Capítulo 1.
+
+Cada partida começa com quatro pontos de energia da Central. A orientação custa um ponto e o foco investigativo custa dois. As dicas mostram uma direção didática ou a lacuna de investigação, nunca o diagnóstico, e são registradas no Diário da Equipe ao final.
+
+Depois das pistas, cada missão apresenta uma **Operação-chave** contextualizada. O jogador escolhe uma primeira rota territorial, vê o impacto simulado nos casos e só então aplica as medidas prioritárias. Essa escolha também aparece no relatório final.
+
+Além das variações clínicas próprias de Distrito Alvorada, os demais dossiês alternam aberturas operacionais persistentes: mudam o contexto inicial, os indicadores e a fala de campo, mas preservam o núcleo diagnóstico da missão. A rota sorteada é gravada na partida ativa para que uma recarga não transforme o caso no meio da investigação.
+
+Uma hipótese final frágil não reinicia automaticamente o episódio. O cenário registra aumento de pressão, preserva a resposta já aplicada e devolve a equipe à investigação para buscar outra lente. O encerramento só ocorre se os limites operacionais do caso forem ultrapassados; o debriefing final explica o diferencial e a evidência de maior peso.
+
+## Conteúdo em revisão
+
+O roteiro do Capítulo 2, a origem na planilha da equipe e os critérios de validação docente estão em [docs/referencias/matriz-capitulo-2-revisao.md](docs/referencias/matriz-capitulo-2-revisao.md). Rascunhos médicos não entram como dossiês jogáveis até receberem revisão docente e confirmação da fonte oficial.
+
 ## Identidade de jogador e acompanhamento
 
 A identidade v2 substitui os identificadores antigos. No primeiro acesso após a atualização, o navegador solicita um novo perfil e gera um código no formato `MISSAO-XXXX-XXXX-XXXX`. O estudante guarda esse código e pode informá-lo em outro navegador para reunir XP, melhor pontuação, partidas e dossiês concluídos na mesma identidade.

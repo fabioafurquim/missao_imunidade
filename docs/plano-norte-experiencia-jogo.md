@@ -167,3 +167,29 @@ A investigação regular não terá contagem regressiva contínua. Futuras prova
 - O jogador consegue relatar o que mudou depois de uma decisão.
 - O celular permite concluir toda a missão sem controles encobertos ou textos inacessíveis.
 - Ao terminar, o jogador demonstra vontade de abrir outro caso.
+
+## Implementado no ciclo atual
+
+- A Base de Operações já apresenta alertas e territórios controlados em um mapa visual animado.
+- Os oito dossiês possuem histórias humanas ilustradas, exibidas como contexto opcional antes da investigação.
+- A Mesa de Investigação passou a organizar a resposta inicial sem pedir o diagnóstico. A hipótese final fica no encerramento, depois das medidas e de suas consequências.
+- A central oferece quatro pontos de energia por partida para dicas. A orientação custa um ponto e o foco investigativo custa dois; ambos mostram o próximo raciocínio útil sem revelar o diagnóstico e ficam registrados no Diário da Equipe.
+- O Sinal da Central acompanha o episódio com mensagens curtas ligadas ao território, ao número de casos e às pistas descobertas.
+- A Base mostra o avanço do Capítulo 1 por meio de selos de território; ao concluir todos os dossiês, a central muda para um estado de campanha completa e anuncia a abertura futura do próximo capítulo.
+- O Diário da Equipe inclui um indicador visual de consequência, distinguindo ações protetoras de escolhas frágeis e resumindo o estado da resposta.
+- Cada dossiê agora possui uma Operação-chave entre a Mesa de Investigação e a resposta. As três rotas são específicas para o território e apresentam uma escolha protetora, uma parcial e uma de risco. A consequência altera o cenário e entra no Diário da Equipe; o diagnóstico segue reservado para o fechamento.
+- Porto de Mahan, Campus Norte, Pavilhão 7, UTI Aurora, Vale Safira, Instituto Ponte e Ilha Aurora passaram a sortear duas aberturas operacionais persistentes. Cada abertura altera o contexto humano, a síndrome inicial, os indicadores da central e a fala de campo, sem trocar o diagnóstico oculto durante a partida. Distrito Alvorada mantém suas variações clínicas próprias. A seleção é salva na partida ativa e permanece igual após recarregar a página.
+- Uma hipótese final frágil não encerra automaticamente a missão. A pressão do surto aumenta, a capacidade de cuidado sofre impacto e a equipe volta à Mesa de Investigação com duas ações e um recurso recuperado para buscar outra lente. Apenas ao ultrapassar o limite de casos ou de ciclos a missão entra em revisão. A tentativa é registrada no Diário da Equipe e a revisão final relaciona cada diferencial ao sinal mais discriminativo do dossiê.
+- O resultado agora usa um debriefing individual: identifica uma decisão protetora do percurso, aponta a principal lacuna efetivamente registrada na partida e apresenta uma linha do tempo completa das decisões clínicas, territoriais e diagnósticas. Não usa um texto genérico de desempenho para todos os jogadores.
+
+## Próximo bloco
+
+1. Fazer os territórios controlados mudarem visualmente de forma mais marcante no mapa e abrir uma cena curta de conclusão de capítulo.
+2. Criar efeitos de consequência específicos para cada missão, com mudanças claras de atendimento, vigilância e exposição.
+3. Ampliar as histórias ilustradas para os demais cenários e revisar cada narrativa com docentes.
+4. Criar variações de pistas e eventos para todos os dossiês, preservando coerência clínica e epidemiológica.
+5. Revisar as variações operacionais com docentes e evoluí-las para variações clínicas completas apenas quando houver sinais, diferenciais, medidas e fontes revisados para cada rota.
+
+## Capítulo 2 em preparação
+
+O Capítulo 2 tem uma matriz editorial em `docs/referencias/matriz-capitulo-2-revisao.md`. Ela parte de febre amarela, coqueluche e doença de Chagas, temas presentes na planilha fornecida pela equipe. Os casos só entram como dossiês jogáveis depois de revisão docente de sinais, diferenciais, medidas e fontes oficiais.
