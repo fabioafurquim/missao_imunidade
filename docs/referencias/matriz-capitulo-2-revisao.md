@@ -28,3 +28,30 @@ Esta matriz transforma a planilha `doencas-jogo.xlsx` em uma fila revisável de 
 3. Pedir a opinião local ao final e exportar o resumo pelo próprio dispositivo.
 4. Consolidar dúvidas recorrentes antes de ampliar o capítulo.
 
+## Roteiros editoriais consolidados nesta etapa
+
+### Rota Dourada — febre amarela
+
+- **Abertura humana:** uma agente de saúde encontra famílias recém-chegadas em um território onde aumentam os alertas de febre e existem lacunas de cobertura vacinal.
+- **Mecânica:** o estudante prioriza áreas de busca, proteção de pessoas não vacinadas, vigilância vetorial e confirmação oportuna.
+- **Raciocínio central:** a fase inicial pode ser pouco específica; febre, icterícia e sinais de gravidade precisam ser lidos junto ao contexto vetorial, à exposição e à confirmação adequada.
+- **Diferenciais para revisão:** malária, leptospirose, dengue e hepatites virais.
+- **Base consultada:** a OMS descreve febre amarela como doença viral transmitida por mosquitos diurnos; reconhece febre, náuseas e fraqueza na apresentação inicial, e recorrência de febre alta, icterícia, vômitos, sangramento e falência orgânica em casos graves. A vacinação é a principal prevenção. [OMS — Febre amarela](https://www.who.int/news-room/fact-sheets/detail/yellow-fever)
+
+### Vila Horizonte — coqueluche
+
+- **Abertura humana:** um bebê pequeno é levado ao serviço depois de contatos próximos apresentarem tosse persistente; a família precisa entender quais informações ajudam a equipe.
+- **Mecânica:** o estudante organiza uma cronologia de tosse, separa contatos prioritários de contatos amplos e protege pessoas vulneráveis sem disseminar pânico.
+- **Raciocínio central:** a tosse pode começar de modo inespecífico e evoluir para crises; idade, duração, proximidade e risco para lactentes devem orientar a resposta.
+- **Diferenciais para revisão:** bronquiolite, infecções virais respiratórias, pneumonia e outras causas de tosse prolongada, ajustadas ao semestre.
+- **Base consultada:** a OMS descreve transmissão principalmente por gotículas, risco maior em lactentes, sintomas iniciais com febre leve, coriza e tosse que pode evoluir para paroxismos, além da vacinação como principal prevenção. [OMS — Coqueluche](https://www.who.int/health-topics/pertussis)
+
+### Corredor Andino — doença de Chagas
+
+- **Abertura humana:** durante uma visita comunitária, a equipe encontra casas com frestas, relatos de insetos noturnos e uma pessoa com quadro recente ainda inespecífico.
+- **Mecânica:** o estudante combina leitura ambiental, investigação de exposição e encaminhamento para confirmação, sem reduzir a situação a um único achado.
+- **Raciocínio central:** a fase aguda pode ser leve ou inespecífica; contexto vetorial, rotas alternativas de transmissão e confirmação precisam ser considerados juntos.
+- **Diferenciais para revisão:** leishmaniose, malária, viroses febris e outras condições escolhidas conforme o roteiro final e o semestre.
+- **Base consultada:** a OMS descreve transmissão vetorial por triatomíneos, que costumam ocupar frestas de paredes e telhados e ter atividade noturna. A apresentação inicial pode ser inespecífica; sinais como lesão cutânea ou edema palpebral podem ajudar em casos novos. [OMS — Doença de Chagas](https://www.who.int/health-topics/chagas-disease)
+
+> Estes roteiros são material editorial. A descrição de medidas, sinais, diferenciais e avaliação deve receber validação docente documentada antes de se tornar uma missão iniciável.

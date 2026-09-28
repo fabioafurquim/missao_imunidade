@@ -1,6 +1,6 @@
 # PostgreSQL em produção
 
-A aplicação funciona sem banco, com progresso local. Para persistir XP, moedas, dossiês concluídos, missão diária e sequência entre navegadores, configure uma instância PostgreSQL de produção e a variável `DATABASE_URL` na aplicação do Coolify.
+A aplicação funciona sem banco, com progresso local. Para persistir XP, moedas, dossiês concluídos, missão diária, histórico de jornada e a partida em andamento entre navegadores, configure uma instância PostgreSQL de produção e a variável `DATABASE_URL` na aplicação do Coolify.
 
 ## Configuração no Coolify
 
@@ -8,6 +8,8 @@ A aplicação funciona sem banco, com progresso local. Para persistir XP, moedas
 2. Na aplicação **Missão Imunidade**, defina `DATABASE_URL` com a URL de conexão entregue pelo serviço.
 3. Defina `PGSSLMODE=require` apenas se o provedor exigir SSL. Para uma conexão interna do Coolify, deixe essa variável ausente.
 4. Faça o deploy. A API cria e atualiza a tabela `game_profiles` automaticamente, sem migrar dados de estudantes ou criar contas.
+
+Para permitir o vínculo opcional com Google, crie no Google Cloud um cliente OAuth do tipo **Aplicação Web**, autorize a origem `https://missaoimunidade.furquim.cloud` e configure apenas `GOOGLE_CLIENT_ID` no Coolify. O botão não aparece quando essa variável não existe. Não configure ou versione um segredo de cliente para este fluxo.
 
 Não coloque URL de banco, senhas ou valores de variáveis em arquivos versionados, no README público ou em logs.
 
@@ -25,7 +27,9 @@ Na inicialização, a aplicação também cria as colunas de recordes `best_scor
 
 ## Dados armazenados
 
-`game_profiles` contém um identificador aleatório criado pelo navegador, nome de exibição, XP, moedas, ids de dossiês concluídos e estado da missão diária. Semestre, foco de estudo e opinião de teste não são enviados à API.
+`game_profiles` contém um identificador aleatório criado pelo navegador, nome de exibição, XP, moedas, ids de dossiês concluídos e estado da missão diária. `active_games` guarda somente o estado técnico da partida ainda aberta; `game_runs` guarda o resumo de encerramentos para a Jornada. Semestre, foco de estudo e opinião de teste não são enviados à API.
+
+Quando o acesso Google é habilitado, `auth_identities` guarda somente o provedor, o identificador técnico estável devolvido pelo Google e a referência ao perfil do jogo. E-mail, senha, foto e tokens do estudante não são persistidos.
 
 ## Identidade de jogador e acompanhamento
 

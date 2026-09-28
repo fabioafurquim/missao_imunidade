@@ -79,6 +79,8 @@ As mecânicas precisam ser revisadas por docentes antes de entrarem em produçã
 - Não bloquear opções clínicas necessárias por moedas ou nível.
 - Criar coleção de casos resolvidos e selos ligados a competências praticadas.
 - Manter a missão diária como retorno opcional, com objetivo e recompensa claros.
+- A Jornada deve reunir partidas encerradas, tentativas, recompensas e evolução por competência, sem transformar a experiência em vigilância acadêmica.
+- A partida ativa deve poder ser retomada com a mesma identidade em outro dispositivo. O código recuperável segue como caminho padrão; vínculo Google é opcional, sem e-mail armazenado.
 - Separar XP de missão, XP de domínio, moedas de resposta e bônus opcionais. O erro reduz a parcela ligada ao domínio; não apaga todo o progresso de aprendizagem.
 - A Central de Evolução já oferece títulos, conquistas e emblemas cosméticos adquiridos com moedas, sem bloquear conteúdo clínico.
 
@@ -193,3 +195,9 @@ A investigação regular não terá contagem regressiva contínua. Futuras prova
 ## Capítulo 2 em preparação
 
 O Capítulo 2 tem uma matriz editorial em `docs/referencias/matriz-capitulo-2-revisao.md`. Ela parte de febre amarela, coqueluche e doença de Chagas, temas presentes na planilha fornecida pela equipe. Os casos só entram como dossiês jogáveis depois de revisão docente de sinais, diferenciais, medidas e fontes oficiais.
+
+## Expansão de conteúdo em desenvolvimento
+
+- A Base de Operações agora possui uma cerimônia de encerramento visual do Capítulo 1. Quando todos os oito territórios são controlados, o mapa reconhece a conquista, entrega o selo **Guardião da Resposta** e apresenta a próxima transmissão da Central.
+- Abaixo da cerimônia, o Capítulo 2 aparece como uma prévia de desenvolvimento. Rota Dourada, Vila Horizonte e Corredor Andino mostram contexto narrativo, mecânica proposta, competência principal e fonte oficial, sempre marcados como **em revisão docente**.
+- Os rascunhos não são dossiês iniciáveis e não contam para XP, moedas, recordes ou missão diária. A liberação exige aprovação docente registrada para cada caso, de acordo com a matriz editorial.

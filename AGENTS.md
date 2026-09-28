@@ -58,7 +58,9 @@ Os cenários usam sínteses de fontes oficiais: OMS para cólera, dengue, saramp
 - Asset principal: `src/assets/globo-sudeste-asiatico-3d.png`;
 - Produção: Docker multiestágio com servidor Node na porta 80; a SPA e a API de progresso são entregues pelo mesmo processo.
 
-O projeto não possui autenticação ou cadastro. Cada navegador cria um identificador técnico para persistir XP, moedas, dossiês concluídos, nome de exibição e o resgate da missão diária em `localStorage` e, se `DATABASE_URL` estiver configurada, no PostgreSQL. A retomada da partida fica no navegador nesta fase. O formulário de opinião de teste continua local e pode ser copiado pelo próprio estudante; não é enviado a servidor.
+O perfil padrão não exige cadastro: cada navegador cria um identificador técnico recuperável para persistir XP, moedas, dossiês concluídos, nome de exibição e o resgate da missão diária em `localStorage` e, se `DATABASE_URL` estiver configurada, no PostgreSQL. A partida ativa e o resumo de cada encerramento também são espelhados no PostgreSQL em `active_games` e `game_runs`, para a Jornada e a retomada entre dispositivos. O formulário de opinião de teste continua local e pode ser copiado pelo próprio estudante; não é enviado a servidor.
+
+Quando `GOOGLE_CLIENT_ID` estiver configurada, o jogador pode vincular opcionalmente a identidade recuperável a uma conta Google. Use Google Identity Services no navegador e valide o ID token no servidor com audiência estrita. `auth_identities` guarda somente `provider`, `provider_subject` e `player_id`; nunca persista e-mail, token, foto, senha, semestre ou eixo de estudo. O Google complementa o código recuperável; não o substitui nem deve fazer mesclagem por nome de exibição.
 
 ## Desenvolvimento local
 

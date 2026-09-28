@@ -71,7 +71,9 @@ A interface e a lógica da campanha ficam em `src/main.tsx`. O perfil inicial us
 
 A interface é mobile-first: no celular, o estado do ciclo fica fixo no topo, o mapa não compete com a investigação e cada achado abre como painel de leitura antes de o jogador continuar. O Quadro do caso aparece logo após as escolhas da equipe, com botões de toque ampliados. Todos os modais, inclusive o debriefing, possuem rolagem segura em telas baixas.
 
-Recursos, resultados pendentes, score, decisões e desempenho por competências da partida em andamento ficam em `localStorage` para permitir retomada no mesmo navegador. XP, moedas, missões concluídas e o resgate da missão diária ficam em `localStorage` e, quando `DATABASE_URL` estiver configurada, também são enviados para PostgreSQL pela API própria. O identificador é anônimo e gerado no navegador; não há login, senha nem cadastro. As opiniões de teste continuam somente em `localStorage`.
+Recursos, resultados pendentes, score, decisões e desempenho por competências da partida em andamento ficam em `localStorage`. Com `DATABASE_URL`, a partida ativa também é espelhada no PostgreSQL e pode ser retomada em outro dispositivo usando a mesma identidade. XP, moedas, missões concluídas, missão diária e o histórico de encerramentos ficam no PostgreSQL quando a persistência está configurada. As opiniões de teste continuam somente em `localStorage`.
+
+O código `MISSAO-XXXX-XXXX-XXXX` continua sendo a identidade recuperável padrão. Opcionalmente, quando `GOOGLE_CLIENT_ID` estiver configurada, o jogador pode vincular essa mesma identidade a uma conta Google. O jogo guarda somente o identificador técnico retornado pelo Google e o nome de exibição escolhido pelo jogador; não armazena e-mail, senha, semestre ou eixo de estudo.
 
 O botão **Recordes** mostra dados agregados da central e rankings de melhor pontuação, XP e partidas iniciadas. O banco guarda um identificador técnico, o nome de exibição informado com aviso no perfil, melhor pontuação e contagem de partidas. E-mail, senha, semestre e foco de estudo não são enviados ao ranking.
 
@@ -85,6 +87,8 @@ O projeto possui um `Dockerfile` multiestágio. Em produção, um servidor Node 
 4. Vincule o domínio e faça o deploy.
 
 Para ativar persistência entre dispositivos, configure `DATABASE_URL` com a conexão PostgreSQL no Coolify. A aplicação cria a tabela `game_profiles` na primeira conexão. Sem essa variável, continua funcionando com o progresso local do navegador.
+
+Para habilitar o acesso opcional com Google, crie um cliente OAuth do tipo **Aplicação Web**, autorize `https://missaoimunidade.furquim.cloud` como origem JavaScript e defina `GOOGLE_CLIENT_ID` no Coolify. Não há `GOOGLE_CLIENT_SECRET` nesta integração: o token de identidade recebido no navegador é validado pela API antes de vincular a jornada. Sem `GOOGLE_CLIENT_ID`, nenhum botão Google é exibido.
 
 ## Central de Evolução
 
