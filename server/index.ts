@@ -303,10 +303,10 @@ createServer(async (request, response) => {
       if (!databaseReady || !pool) return respondJson(response, 503, { error: 'Recordes ainda não configurados.' })
       const [summary, score, xp, plays, participants] = await Promise.all([
         pool.query(`SELECT COUNT(*)::int AS players, COUNT(*) FILTER (WHERE last_played_at > NOW() - INTERVAL '30 days')::int AS active_players, COALESCE(SUM(plays), 0)::int AS plays, COALESCE(SUM(jsonb_array_length(completed)), 0)::int AS completed FROM game_profiles`),
-        pool.query(`SELECT player_id AS "playerId", display_name AS "displayName", best_score AS value FROM game_profiles WHERE best_score > 0 ORDER BY best_score DESC, updated_at ASC LIMIT 5`),
-        pool.query(`SELECT player_id AS "playerId", display_name AS "displayName", xp AS value FROM game_profiles WHERE xp > 0 ORDER BY xp DESC, updated_at ASC LIMIT 5`),
-        pool.query(`SELECT player_id AS "playerId", display_name AS "displayName", plays AS value FROM game_profiles WHERE plays > 0 ORDER BY plays DESC, updated_at ASC LIMIT 5`),
-        pool.query(`SELECT player_id AS "playerId", display_name AS "displayName", xp, best_score AS "bestScore", plays, jsonb_array_length(completed) AS completed, created_at AS "createdAt", last_played_at AS "lastPlayedAt", last_mission_id AS "lastMissionId" FROM game_profiles WHERE display_name <> '' ORDER BY xp DESC, last_played_at DESC NULLS LAST, created_at ASC LIMIT 30`),
+        pool.query(`SELECT display_name AS "displayName", best_score AS value FROM game_profiles WHERE best_score > 0 ORDER BY best_score DESC, updated_at ASC LIMIT 5`),
+        pool.query(`SELECT display_name AS "displayName", xp AS value FROM game_profiles WHERE xp > 0 ORDER BY xp DESC, updated_at ASC LIMIT 5`),
+        pool.query(`SELECT display_name AS "displayName", plays AS value FROM game_profiles WHERE plays > 0 ORDER BY plays DESC, updated_at ASC LIMIT 5`),
+        pool.query(`SELECT display_name AS "displayName", xp, best_score AS "bestScore", plays, jsonb_array_length(completed) AS completed, created_at AS "createdAt", last_played_at AS "lastPlayedAt", last_mission_id AS "lastMissionId" FROM game_profiles WHERE display_name <> '' ORDER BY xp DESC, last_played_at DESC NULLS LAST, created_at ASC LIMIT 30`),
       ])
       return respondJson(response, 200, { summary: summary.rows[0], leaderboards: { score: score.rows, xp: xp.rows, plays: plays.rows }, participants: participants.rows })
     }
