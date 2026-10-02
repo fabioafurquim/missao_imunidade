@@ -103,6 +103,12 @@ export const dailyDispatches: DailyDispatch[] = [
   { missionId: 3, label: 'ALERTA DE REDE', title: 'Contatos em movimento', text: 'Um evento fechado ligou estudantes com sintomas respiratórios e exantema.', objective: 'Reconstrua a cadeia e reduza novas exposições.' },
   { missionId: 4, label: 'ALERTA RESPIRATÓRIO', title: 'O ar também é uma pista', text: 'Uma unidade registra casos subagudos ligados por espaços compartilhados.', objective: 'Combine investigação, proteção do cuidado e busca de contatos.' },
   { missionId: 5, label: 'ALERTA HOSPITALAR', title: 'Barreiras sob pressão', text: 'Uma identificação incomum exige resposta coordenada antes de novas transferências.', objective: 'Mapeie expostos e fortaleça as barreiras de controle.' },
+  { missionId: 9, label: 'ALERTA FLORESTAL', title: 'A febre voltou diferente', text: 'Um corredor de viagem reúne casos febris, lacunas vacinais e um paciente que entrou em fase grave.', objective: 'Proteja a gravidade e qualifique a resposta vacinal.' },
+  { missionId: 10, label: 'ALERTA FAMILIAR', title: 'A tosse atravessou a rede', text: 'Um lactente vulnerável foi exposto a contatos com tosse prolongada.', objective: 'Reconstrua a linha do tempo e interrompa a exposição.' },
+  { missionId: 11, label: 'ALERTA COMUNITÁRIO', title: 'A casa guarda pistas', text: 'Um inseto noturno, um quadro agudo e histórias familiares abrem diferentes rotas de investigação.', objective: 'Integre exposição, fase diagnóstica e cuidado longitudinal.' },
+  { missionId: 12, label: 'ALERTA UMA SÓ SAÚDE', title: 'A oportunidade vem antes dos sintomas', text: 'Exposições animais diferentes exigem cuidado imediato e classificação precisa.', objective: 'Lave, classifique e preserve a janela de prevenção.' },
+  { missionId: 13, label: 'ALERTA APÓS A CHUVA', title: 'A rota pela água', text: 'Um mutirão após a enchente conecta febre, lama e sinais de gravidade.', objective: 'Abra uma rota segura e reconheça quem precisa de cuidado urgente.' },
+  { missionId: 14, label: 'ALERTA NO CANTEIRO', title: 'A ferida muda o caso', text: 'Rigidez e espasmos surgem dias depois de um acidente esquecido.', objective: 'Concentre a resposta na emergência, no ferimento e na imunização.' },
 ]
 
 export const missions: Mission[] = [

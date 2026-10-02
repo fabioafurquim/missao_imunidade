@@ -80,16 +80,18 @@ As mecânicas precisam ser revisadas por docentes antes de entrarem em produçã
 - Criar coleção de casos resolvidos e selos ligados a competências praticadas.
 - Manter a missão diária como retorno opcional, com objetivo e recompensa claros.
 - A Jornada deve reunir partidas encerradas, tentativas, recompensas e evolução por competência, sem transformar a experiência em vigilância acadêmica.
-- A partida ativa deve poder ser retomada com a mesma identidade em outro dispositivo. O código recuperável segue como caminho padrão; vínculo Google é opcional, sem e-mail armazenado.
+- A partida ativa deve poder ser retomada com a mesma identidade em outro dispositivo. O código recuperável segue como caminho padrão; o vínculo Google é opcional e o e-mail só é guardado depois de uma autorização explícita, com acesso restrito ao painel administrativo.
 - Separar XP de missão, XP de domínio, moedas de resposta e bônus opcionais. O erro reduz a parcela ligada ao domínio; não apaga todo o progresso de aprendizagem.
 - A Central de Evolução já oferece títulos, conquistas e emblemas cosméticos adquiridos com moedas, sem bloquear conteúdo clínico.
 
 ## Comunidade, recordes e privacidade
 
 - A central de recordes mostra atividade coletiva e rankings de melhor pontuação, XP e partidas iniciadas.
-- Cada participante aparece pelo nome de exibição informado com aviso no perfil e usa um código recuperável para consolidar partidas. O sistema não guarda e-mail, senha, semestre nem matrícula.
+- Cada participante aparece pelo nome de exibição informado com aviso no perfil. Códigos de jogador não são devolvidos pela consulta pública de recordes; o código recuperável continua sendo a identidade da jornada.
 - O PostgreSQL registra total de partidas, melhor pontuação e progresso agregado. Esses dados permitem acompanhar adesão e engajamento sem transformar o perfil didático em cadastro.
-- Login com Google fica para uma etapa posterior, após definição de consentimento, política de privacidade, finalidade dos dados e fluxo de exclusão de conta. Não é necessário para a experiência atual.
+- O vínculo opcional com Google está implementado: a API valida o token de identidade e associa a conta à jornada. Com consentimento explícito, guarda o e-mail para o acompanhamento administrativo; foto, senha e token não são persistidos. O estudante continua podendo usar o código recuperável sem Google.
+- A interface mostra **Google vinculado** junto ao nome e no perfil, oculta a opção de vincular novamente e recupera esse estado ao reabrir o jogo. O vínculo serve para reencontrar a mesma jornada em outro dispositivo; não altera semestre nem eixo de estudo.
+- A tela de recordes não expõe códigos internos. O identificador continua necessário para reunir progresso, histórico e partidas da mesma pessoa, mas permanece fora da lista pública.
 
 ## Rejogabilidade e biblioteca de doenças
 
@@ -113,30 +115,36 @@ A investigação regular não terá contagem regressiva contínua. Futuras prova
 
 ## Roteiro de implementação
 
-1. Desenhar o roteiro jogável completo de Porto de Mahan: telas, falas, descobertas, escolhas, consequências e recompensa.
-2. Separar as regras da partida das telas atuais para permitir cenas e interações reutilizáveis.
-3. Construir o episódio piloto completo: chamado, cena de campo, exploração, investigação, decisão, intervenção e desfecho.
-4. Testar o piloto com estudantes sem explicação adicional e registrar onde param, o que entendem e o que querem fazer a seguir.
-5. Ajustar ritmo, legibilidade e recompensas com base nos testes.
-6. Adaptar o modelo aos outros quatro casos, preservando uma interação característica para cada um.
-7. Acrescentar personalização, desafios opcionais e conteúdo revisado por docentes.
-8. Revisar os novos episódios com docentes e criar uma segunda variação para cada cenário.
-9. Permitir rever etapas concluídas e criar a biblioteca opcional **Conheça a doença**.
-10. Testar em Porto de Mahan decisões que continuam após o erro, com consequência imediata e explicação no resultado.
-11. Transformar o mapa na interface principal da campanha, incluindo estados dos territórios e sinal da missão diária.
-12. Encerrar as oito missões como Capítulo 1 e liberar a estrutura do Capítulo 2.
-13. Avaliar, com a equipe docente e de privacidade, se autenticação opcional traz benefício real para a turma.
+1. Fazer testes de usabilidade da Base de Operações, da Jornada e da recuperação com código/Google em computador e celular.
+2. Testar os seis episódios do Capítulo 2 e registrar ajustes de sinais discriminativos, diferenciais, medidas, consequências e fontes.
+3. Ampliar o Capítulo 2 com novas rotas da planilha, preservando mecânicas próprias e referências oficiais.
+4. Validar a retomada de partidas entre navegadores e dispositivos, incluindo interrupção no meio de um caso e retorno pela mesma identidade.
+5. Usar as opiniões dos estudantes para ajustar clareza, legibilidade, feedback e ritmo antes de ampliar a quantidade de conteúdo.
 
 ## Ciclo de aprofundamento aprovado pela equipe
 
-- Em implementação: cada episódio passa a abrir com uma **história humana curta**, separada das cartas. Ela cria interesse e contexto, mas não entrega a resposta diagnóstica.
-- Em implementação: uma defesa frágil deixa de ser um bloqueio de tentativa e erro. A equipe continua em campo, a pressão do surto aumenta de forma visível e o jogador é direcionado a buscar outra lente; o debriefing explicará a lacuna e os diferenciais.
-- Em implementação: etapas já visitadas se tornarão um **diário de bordo** para consulta, sem desfazer recursos ou escolhas. A Nina oferecerá dicas contextuais em camadas, sem custo ou punição por pedir ajuda.
+- Concluído: os episódios abrem com uma **história humana curta**, separada das cartas de evidência, que cria contexto sem antecipar o diagnóstico.
+- Concluído: uma defesa frágil não bloqueia o avanço por tentativa e erro. A pressão aumenta, a equipe procura outra lente e o debriefing explica a lacuna e os diferenciais ao final.
+- Concluído: as etapas já visitadas podem ser consultadas pelo cabeçalho do episódio sem desfazer recursos ou escolhas. A Nina oferece dicas contextuais em camadas, sem custo ou punição por pedir ajuda.
 - Planejado para o mesmo modelo: duas decisões de resposta entre três opções por vez, com alternativas inadequadas e consequências operacionais claras; a defesa diagnóstica ocorrerá no fechamento da missão, depois das primeiras medidas sindrômicas de proteção.
 - Planejado: o resultado exibirá uma linha do tempo de acertos, escolhas frágeis, efeito no cenário, XP de participação e XP de domínio; a aba opcional **Conheça a doença** apresentará diferenciais e porquês após o encerramento.
 - Planejado: o mapa da campanha passará a usar geografia real como contexto, deixando explícito que os episódios são simulações educativas. Marcadores e painéis devem se afastar do ponto geográfico selecionado; no celular, a ficha da missão sobe abaixo do mapa.
 
 ## Progresso da implementação
+
+- Concluído no ciclo mais recente: a Jornada reúne resumos individuais das partidas encerradas e permite retomar uma partida em andamento pela mesma identidade, com dados espelhados no PostgreSQL.
+- Concluído no ciclo mais recente: o vínculo opcional com Google foi integrado à jornada recuperável. O servidor valida o token; a tela identifica a conta conectada junto ao nome e no perfil, e não oferece um segundo vínculo quando ele já existe.
+- Concluído no ciclo mais recente: a resposta pública de Recordes apresenta nomes e resultados sem expor os códigos internos dos jogadores.
+- Concluído no ciclo mais recente: o Capítulo 2 foi aberto com Rota Dourada (febre amarela), Vila Horizonte (coqueluche) e Corredor Andino (doença de Chagas). Os três possuem episódios completos, escolhas territoriais, consequências, diferenciais, medidas e fontes oficiais.
+- Concluído no ciclo mais recente: o Capítulo 1 mantém seus oito dossiês e uma cerimônia própria. Após controlá-los, o mapa libera sequencialmente seis operações do Capítulo 2.
+- Concluído no ciclo mais recente: visitas por sessão, atividade por jogador e desempenho por missão passaram a ser registrados no PostgreSQL. Um painel administrativo protegido por autenticação Google reúne essas informações.
+- Concluído no ciclo mais recente: o vínculo Google passou a pedir autorização explícita para guardar o e-mail. O e-mail não aparece nos Recordes e fica restrito ao painel administrativo.
+- Concluído no ciclo mais recente: as três missões do Capítulo 2 receberam cenários de exploração e histórias de pacientes exclusivos. Rota Dourada usa um corredor florestal com resposta regional; Vila Horizonte apresenta a rede pediátrica, os contatos e a coleta; Corredor Andino articula visita domiciliar, comunidade, unidade e laboratório móvel.
+- Concluído no ciclo mais recente: os assets narrativos do chamado foram separados dos mapas exploráveis. A abertura aproxima o jogador da pessoa e a exploração amplia o olhar para o território, sem texto embutido nem revelação visual do diagnóstico.
+- Concluído no ciclo mais recente: Rota Dourada, Vila Horizonte e Corredor Andino passaram a sortear duas aberturas persistentes por missão. A variação altera história, indicadores e rota operacional sem trocar o diagnóstico durante a partida.
+- Concluído no ciclo mais recente: Operação Sentinela (raiva), Baixada das Chuvas (leptospirose) e Canteiro Horizonte (tétano) ampliaram a campanha para 14 dossiês. Cada missão acrescenta uma lógica própria: classificação de exposição, rota segura após enchente e emergência individual sem transmissão interpessoal.
+- Concluído no ciclo mais recente: as três novas operações possuem histórias de pacientes e cenários territoriais próprios, além de momento tático, diferenciais, consequências e missão diária.
+- Concluído no ciclo mais recente: tabelas de partida ativa, histórico de partidas e vínculo de identidade são criadas automaticamente pela aplicação quando o PostgreSQL está configurado.
 
 - Concluído nesta etapa: Porto de Mahan recebeu uma história opcional da paciente, apresentada antes da cena de campo e fora das cartas de evidência.
 - Concluído nesta etapa: a resposta do episódio agora mostra apenas as duas prioridades e um atalho de risco. Escolher o atalho aumenta casos, marca a decisão como frágil e pode ser desfeito; escolher as duas prioridades encerra a resposta. A escolha de risco também sobrevive à retomada local da partida.
@@ -158,9 +166,9 @@ A investigação regular não terá contagem regressiva contínua. Futuras prova
 - Concluído: PostgreSQL passou a registrar melhor pontuação e partidas iniciadas, com migração automática de esquema na inicialização.
 - Concluído: a Central de Evolução passou a dar uso visual a XP e moedas por meio de títulos, conquistas e emblemas cosméticos.
 - Concluído: a partida do piloto deriva a tela correta ao ser retomada no navegador.
-- Em validação: clareza da jornada e interesse dos estudantes durante os testes de usabilidade.
-- Pendente: tornar as etapas anteriores consultáveis, registrar escolhas frágeis sem bloquear o caso e explicar suas consequências no resultado.
-- Pendente: transformar o mapa na interface principal da campanha e organizar a continuidade em capítulos.
+- Em validação: clareza do fluxo completo, da retomada entre dispositivos e do vínculo Google opcional durante testes com estudantes.
+- Em validação: conteúdo e ritmo dos três novos dossiês, que poderão ser ajustados quando houver retorno da equipe e revisão médica posterior.
+- Pendente: testar em condições reais de celular a consulta das etapas, o painel de Jornada e o retorno a uma partida interrompida.
 
 ## Critérios para aprovar o piloto
 
@@ -186,18 +194,64 @@ A investigação regular não terá contagem regressiva contínua. Futuras prova
 
 ## Próximo bloco
 
-1. Fazer os territórios controlados mudarem visualmente de forma mais marcante no mapa e abrir uma cena curta de conclusão de capítulo.
-2. Criar efeitos de consequência específicos para cada missão, com mudanças claras de atendimento, vigilância e exposição.
-3. Ampliar as histórias ilustradas para os demais cenários e revisar cada narrativa com docentes.
-4. Criar variações de pistas e eventos para todos os dossiês, preservando coerência clínica e epidemiológica.
-5. Revisar as variações operacionais com docentes e evoluí-las para variações clínicas completas apenas quando houver sinais, diferenciais, medidas e fontes revisados para cada rota.
+1. Testar a vinculação Google e a retomada da Jornada em outro navegador, verificando que o perfil e as partidas correspondem à mesma identidade.
+2. Fazer uma rodada de teste da Base de Operações e do debriefing em celular, registrando pontos de confusão e problemas de acessibilidade.
+3. Testar Rota Dourada, Vila Horizonte e Corredor Andino do início ao debriefing, registrando pontos de confusão e equilíbrio.
+4. Selecionar a próxima onda da planilha por variedade de mecânica, incluindo água, vetores, contato próximo, ferimentos e exposições ambientais.
+5. Definir o processo de suporte, correção de e-mail e exclusão dos dados vinculados ao Google.
 
-## Capítulo 2 em preparação
+## Capítulo 2 jogável
 
-O Capítulo 2 tem uma matriz editorial em `docs/referencias/matriz-capitulo-2-revisao.md`. Ela parte de febre amarela, coqueluche e doença de Chagas, temas presentes na planilha fornecida pela equipe. Os casos só entram como dossiês jogáveis depois de revisão docente de sinais, diferenciais, medidas e fontes oficiais.
+O Capítulo 2 reúne febre amarela, coqueluche, doença de Chagas, raiva, leptospirose e tétano, temas presentes na planilha fornecida pela equipe. A matriz editorial permanece como registro de autoria e pontos que podem ser aprimorados. A equipe decidiu permitir testes jogáveis antes da revisão docente formal, aceitando ajustes posteriores.
 
 ## Expansão de conteúdo em desenvolvimento
 
 - A Base de Operações agora possui uma cerimônia de encerramento visual do Capítulo 1. Quando todos os oito territórios são controlados, o mapa reconhece a conquista, entrega o selo **Guardião da Resposta** e apresenta a próxima transmissão da Central.
-- Abaixo da cerimônia, o Capítulo 2 aparece como uma prévia de desenvolvimento. Rota Dourada, Vila Horizonte e Corredor Andino mostram contexto narrativo, mecânica proposta, competência principal e fonte oficial, sempre marcados como **em revisão docente**.
-- Os rascunhos não são dossiês iniciáveis e não contam para XP, moedas, recordes ou missão diária. A liberação exige aprovação docente registrada para cada caso, de acordo com a matriz editorial.
+- Abaixo da cerimônia, o Capítulo 2 mostra o progresso das seis operações e passa a agrupá-las conceitualmente por rotas vetoriais, respiratórias, ambientais e de Uma Só Saúde.
+- Os novos dossiês contam para XP, moedas, Jornada e Recordes. A missão diária também pode selecioná-los.
+
+
+## Instrumentação e desempenho da campanha
+
+- A cena de resposta representa visualmente a consequência da Operação-chave e o avanço das medidas prioritárias. A animação deve comunicar mudança e respeitar a preferência de redução de movimento.
+- O PostgreSQL registra um funil técnico por partida: início, etapa alcançada, uso de dica, escolha tática, tentativa de fechamento e saída. O painel administrativo apresenta dados agregados por missão.
+- “Partidas em aberto” é uma estimativa e pode incluir jogadores que ainda estão jogando; não deve ser apresentada como abandono definitivo.
+- O mapa mantém todos os focos acessíveis, mas revela o rótulo apenas na seleção, no foco de teclado ou no ponteiro para reduzir sobreposição.
+- As artes importadas pela aplicação usam WebP otimizado. Os PNGs de autoria podem permanecer no repositório como fonte, mas não devem ser entregues no pacote de produção quando houver versão WebP equivalente.
+
+
+## Avanço da rodada — rotas de especialização
+
+- Concluído: o Capítulo 2 deixou de usar uma fila linear única e passou a oferecer quatro caminhos: Vetorial, Respiratório, Uma Só Saúde e Ambiental.
+- Concluído: a primeira operação de cada rota fica disponível quando o capítulo abre. As etapas seguintes dependem apenas do progresso dentro da rota escolhida.
+- Concluído: a central mostra objetivo, progresso, missões e selo de cada caminho. O selo é conquistado quando todas as operações daquela rota são controladas.
+- Concluído: cada missão do Capítulo 2 identifica sua rota no chamado, reforçando qual competência está sendo praticada.
+- Concluído: a missão diária e os marcadores do mapa respeitam o novo desbloqueio ramificado.
+- Concluído: o modo de teste permite inspecionar e iniciar as rotas sem alterar o progresso real da campanha.
+
+## Próxima rodada sugerida
+
+A próxima evolução deve levar a identidade das rotas para dentro da jogabilidade. Cada caminho receberá uma interação exclusiva reutilizável: mapa de cobertura na rota vetorial, cadeia de contatos na respiratória, classificação de exposição em Uma Só Saúde e montagem de rota segura na ambiental.
+
+## Avanço da rodada — desafios interativos por rota
+
+- Concluído: as seis missões do Capítulo 2 possuem desafios opcionais no mapa de exploração, com mecânicas coerentes com a rota: cobertura territorial, cadeia de contatos, exposição vetorial, classificação de contato com animal, planejamento ambiental e avaliação individual de ferimento.
+- Concluído: cada alternativa recebe uma explicação didática no momento da escolha. A interação não bloqueia o avanço nem revela o diagnóstico.
+- Concluído: uma priorização adequada concede um recurso simulado e reduz levemente a pressão do cenário; uma escolha frágil continua a partida e fica registrada no Diário da Equipe para revisão individual.
+- Concluído: escolhas e resultados usam o estado persistido da partida, então permanecem após retomada local ou entre dispositivos quando a persistência está configurada.
+
+## Próxima rodada sugerida
+
+Dar resposta visual do território para cada consequência, variar os desafios dentro dos limites de cada operação e validar se o painel funciona bem em celular sem empurrar pistas e locais de exploração para fora do alcance.
+
+## Avanço da rodada — o território reage
+
+O resultado do desafio de rota passa a aparecer também sobre a arte do mapa, com cor, pulso breve e frase de estado. A mudança deve ser legível sem depender da animação; a preferência por redução de movimento continua respeitada. Em celular, os locais investigáveis precedem o desafio opcional para preservar a ação principal.
+
+## Avanço da rodada — rejogabilidade coerente
+
+Cada uma das seis operações do Capítulo 2 oferece duas aberturas operacionais e um desafio correspondente. A situação é sorteada no início e persistida com a partida, sem trocar a hipótese clínica ou as evidências no meio da investigação. O resultado final registra a escolha individual e oferece revisão opcional de todos os caminhos do desafio. O bônus por boa priorização aumenta apenas o recurso de investigação simulado; não reduz imediatamente os casos acompanhados.
+
+Os cartões do desafio receberam símbolos associados à rota e uma ordem sorteada por partida. Essa ordem integra o estado salvo e não muda ao retomar, evitando que uma posição fixa denuncie a melhor resposta.
+
+Na verificação do episódio completo, a ordem de descoberta das pistas passou a ser preservada ao restaurar a partida. Uma pista do Canteiro Horizonte foi reescrita para não revelar o nome do diagnóstico antes da defesa final.

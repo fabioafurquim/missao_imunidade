@@ -10,8 +10,8 @@ export type ChapterTwoDraft = {
   source: { label: string; url: string }
 }
 
-// Conteúdo editorial. Não é importado para `missions` e não pode ser iniciado
-// até existir uma validação docente registrada na matriz de revisão.
+// Resumo editorial das missões 09–11. Os episódios jogáveis vivem em
+// `expansion-missions.ts`; esta coleção alimenta a apresentação do capítulo.
 export const chapterTwoDrafts: ChapterTwoDraft[] = [
   {
     code: 'RASCUNHO 09',

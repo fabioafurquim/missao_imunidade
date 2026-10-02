@@ -1,7 +1,7 @@
 import { createReadStream, existsSync, readFileSync } from 'node:fs'
 import { stat } from 'node:fs/promises'
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http'
-import { randomBytes } from 'node:crypto'
+import { createHmac, timingSafeEqual } from 'node:crypto'
 import { extname, join, normalize } from 'node:path'
 import { OAuth2Client } from 'google-auth-library'
 import { Pool } from 'pg'
@@ -28,7 +28,7 @@ const rewards = {
 
 type RewardId = keyof typeof rewards
 type Progress = { playerId: string; xp: number; coins: number; completed: number[]; dailyClaimed: string; lastActiveDay: string; streak: number; bestScore: number; inventory: string[]; equippedStyle: string }
-type ActiveGame = { missionId: number; variantId: string | null; cycle: number; actions: number; cases: number; care: number; resources: number; clueIds: string[]; interventionIds: string[]; logs: unknown[]; urgentCare: boolean; pendingLabId: string | null; phase: 'investigation' | 'containment'; dailyMission: boolean; pilotStage: string; insightEnergy: number; hintUses: string[]; tacticalChoiceId: string | null }
+type ActiveGame = { missionId: number; variantId: string | null; routeOptionOrder?: string[]; cycle: number; actions: number; cases: number; care: number; resources: number; clueIds: string[]; interventionIds: string[]; logs: unknown[]; urgentCare: boolean; pendingLabId: string | null; phase: 'investigation' | 'containment'; dailyMission: boolean; pilotStage: string; insightEnergy: number; hintUses: string[]; tacticalChoiceId: string | null }
 type RunSummary = { playerId: string; missionId: number; variantId?: string | null; outcome: 'won' | 'lost'; score: number; xpEarned: number; coinsEarned: number; cycle: number; cases: number; care: number; riskUsed: boolean; competencies: Record<string, number> }
 
 const port = Number(process.env.PORT || 80)
@@ -36,11 +36,27 @@ const dist = join(process.cwd(), 'dist')
 const pool = process.env.DATABASE_URL ? new Pool({ connectionString: process.env.DATABASE_URL, ssl: process.env.PGSSLMODE === 'require' ? { rejectUnauthorized: false } : undefined }) : null
 const googleClientId = process.env.GOOGLE_CLIENT_ID || ''
 const googleClient = googleClientId ? new OAuth2Client(googleClientId) : null
+const adminEmails = new Set((process.env.ADMIN_EMAILS || '').split(',').map((email) => email.trim().toLowerCase()).filter(Boolean))
+const adminSessionSecret = process.env.ADMIN_SESSION_SECRET || ''
+const adminEnabled = Boolean(googleClient && adminEmails.size && adminSessionSecret.length >= 32)
 let databaseReady = false
 
 const respondJson = (response: ServerResponse, status: number, value: unknown) => {
   response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' })
   response.end(JSON.stringify(value))
+}
+
+const parseCookies = (request: IncomingMessage) => Object.fromEntries((request.headers.cookie || '').split(';').map((part) => part.trim().split('=').map(decodeURIComponent)).filter((pair) => pair.length === 2))
+const signAdminSession = (email: string, expires: number) => { const payload = Buffer.from(JSON.stringify({ email, expires })).toString('base64url'); const signature = createHmac('sha256', adminSessionSecret).update(payload).digest('base64url'); return `${payload}.${signature}` }
+const readAdminSession = (request: IncomingMessage) => {
+  if (!adminEnabled) return null
+  const token = parseCookies(request).missao_admin
+  if (!token) return null
+  const [payload, signature] = token.split('.')
+  if (!payload || !signature) return null
+  const expected = createHmac('sha256', adminSessionSecret).update(payload).digest('base64url')
+  if (signature.length !== expected.length || !timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return null
+  try { const value = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) as { email?: string; expires?: number }; return value.email && value.expires && value.expires > Date.now() && adminEmails.has(value.email) ? value.email : null } catch { return null }
 }
 
 const validProgress = (value: unknown): value is Progress => {
@@ -53,7 +69,7 @@ const validPlayerId = (value: unknown): value is string => typeof value === 'str
 const validActiveGame = (value: unknown): value is ActiveGame => {
   if (!value || typeof value !== 'object') return false
   const game = value as ActiveGame
-  return Number.isInteger(game.missionId) && game.missionId > 0 && game.missionId <= 99 && (game.variantId === null || typeof game.variantId === 'string') && Number.isInteger(game.cycle) && game.cycle >= 1 && game.cycle <= 99 && Number.isInteger(game.actions) && game.actions >= 0 && game.actions <= 3 && Number.isInteger(game.cases) && game.cases >= 0 && game.cases <= 1_000_000 && Number.isInteger(game.care) && game.care >= 0 && game.care <= 100 && Number.isInteger(game.resources) && game.resources >= 0 && game.resources <= 10 && Array.isArray(game.clueIds) && game.clueIds.every((item) => typeof item === 'string' && item.length <= 100) && Array.isArray(game.interventionIds) && game.interventionIds.every((item) => typeof item === 'string' && item.length <= 100) && Array.isArray(game.logs) && game.logs.length <= 100 && typeof game.urgentCare === 'boolean' && (game.pendingLabId === null || typeof game.pendingLabId === 'string') && (game.phase === 'investigation' || game.phase === 'containment') && typeof game.dailyMission === 'boolean' && typeof game.pilotStage === 'string' && game.pilotStage.length <= 40 && Number.isInteger(game.insightEnergy) && game.insightEnergy >= 0 && game.insightEnergy <= 4 && Array.isArray(game.hintUses) && game.hintUses.every((item) => typeof item === 'string' && item.length <= 100) && (game.tacticalChoiceId === null || typeof game.tacticalChoiceId === 'string')
+  return Number.isInteger(game.missionId) && game.missionId > 0 && game.missionId <= 99 && (game.variantId === null || typeof game.variantId === 'string') && (game.routeOptionOrder === undefined || (Array.isArray(game.routeOptionOrder) && game.routeOptionOrder.length <= 3 && game.routeOptionOrder.every((item) => typeof item === 'string' && item.length <= 100) && new Set(game.routeOptionOrder).size === game.routeOptionOrder.length)) && Number.isInteger(game.cycle) && game.cycle >= 1 && game.cycle <= 99 && Number.isInteger(game.actions) && game.actions >= 0 && game.actions <= 3 && Number.isInteger(game.cases) && game.cases >= 0 && game.cases <= 1_000_000 && Number.isInteger(game.care) && game.care >= 0 && game.care <= 100 && Number.isInteger(game.resources) && game.resources >= 0 && game.resources <= 10 && Array.isArray(game.clueIds) && game.clueIds.every((item) => typeof item === 'string' && item.length <= 100) && Array.isArray(game.interventionIds) && game.interventionIds.every((item) => typeof item === 'string' && item.length <= 100) && Array.isArray(game.logs) && game.logs.length <= 100 && typeof game.urgentCare === 'boolean' && (game.pendingLabId === null || typeof game.pendingLabId === 'string') && (game.phase === 'investigation' || game.phase === 'containment') && typeof game.dailyMission === 'boolean' && typeof game.pilotStage === 'string' && game.pilotStage.length <= 40 && Number.isInteger(game.insightEnergy) && game.insightEnergy >= 0 && game.insightEnergy <= 4 && Array.isArray(game.hintUses) && game.hintUses.every((item) => typeof item === 'string' && item.length <= 100) && (game.tacticalChoiceId === null || typeof game.tacticalChoiceId === 'string')
 }
 const validRun = (value: unknown): value is RunSummary => {
   if (!value || typeof value !== 'object') return false
@@ -135,6 +151,30 @@ const initDatabase = async () => {
       PRIMARY KEY (provider, provider_subject),
       UNIQUE (player_id, provider)
     )`)
+    await pool.query('ALTER TABLE auth_identities ADD COLUMN IF NOT EXISTS email TEXT')
+    await pool.query('ALTER TABLE auth_identities ADD COLUMN IF NOT EXISTS email_consent_at TIMESTAMPTZ')
+    await pool.query(`CREATE TABLE IF NOT EXISTS player_visits (
+      id BIGSERIAL PRIMARY KEY,
+      player_id TEXT REFERENCES game_profiles(player_id) ON DELETE SET NULL,
+      session_id TEXT NOT NULL,
+      visited_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      user_agent TEXT NOT NULL DEFAULT '',
+      UNIQUE (session_id)
+    )`)
+    await pool.query('CREATE INDEX IF NOT EXISTS player_visits_player_time_idx ON player_visits (player_id, visited_at DESC)')
+    await pool.query(`CREATE TABLE IF NOT EXISTS mission_events (
+      id BIGSERIAL PRIMARY KEY,
+      event_id TEXT NOT NULL UNIQUE,
+      run_id TEXT NOT NULL,
+      player_id TEXT REFERENCES game_profiles(player_id) ON DELETE SET NULL,
+      mission_id INTEGER NOT NULL,
+      event_type TEXT NOT NULL,
+      stage TEXT NOT NULL DEFAULT '',
+      detail JSONB NOT NULL DEFAULT '{}'::jsonb,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`)
+    await pool.query('CREATE INDEX IF NOT EXISTS mission_events_mission_time_idx ON mission_events (mission_id, created_at DESC)')
+    await pool.query('CREATE INDEX IF NOT EXISTS mission_events_run_idx ON mission_events (run_id, created_at)')
     const identityReset = await pool.query("SELECT 1 FROM game_schema_migrations WHERE key = 'identity-v2-reset'")
     if (!identityReset.rowCount) {
       await pool.query('DELETE FROM game_profiles')
@@ -151,7 +191,7 @@ const serveStatic = async (request: IncomingMessage, response: ServerResponse) =
   const safePath = normalize(requested).replace(/^([/\\])+/, '')
   const candidate = join(dist, safePath)
   const file = existsSync(candidate) && (await stat(candidate)).isFile() ? candidate : join(dist, 'index.html')
-  const contentType: Record<string, string> = { '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.svg': 'image/svg+xml', '.html': 'text/html' }
+  const contentType: Record<string, string> = { '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.html': 'text/html' }
   response.writeHead(200, { 'Content-Type': `${contentType[extname(file)] || 'application/octet-stream'}; charset=utf-8` })
   createReadStream(file).pipe(response)
 }
@@ -161,14 +201,79 @@ createServer(async (request, response) => {
   try {
     const path = request.url?.split('?')[0] || '/'
     if (path === '/api/health') return respondJson(response, 200, { ok: true, persistence: databaseReady ? 'postgres' : 'local' })
-    if (path === '/api/auth/config' && request.method === 'GET') return respondJson(response, 200, { googleEnabled: Boolean(googleClient), googleClientId: googleClientId || null })
+    if (path === '/api/auth/config' && request.method === 'GET') return respondJson(response, 200, { googleEnabled: Boolean(googleClient), googleClientId: googleClientId || null, adminEnabled })
+    if (path === '/api/telemetry/visit' && request.method === 'POST') {
+      if (!databaseReady || !pool) return respondJson(response, 204, null)
+      const value = await readBody(request)
+      const playerId = value && typeof value === 'object' ? (value as { playerId?: unknown }).playerId : null
+      const sessionId = value && typeof value === 'object' ? (value as { sessionId?: unknown }).sessionId : null
+      if (!validPlayerId(playerId) || typeof sessionId !== 'string' || !/^[a-zA-Z0-9-]{16,100}$/.test(sessionId)) return respondJson(response, 400, { error: 'Visita inválida.' })
+      await pool.query(`INSERT INTO game_profiles (player_id) VALUES ($1) ON CONFLICT (player_id) DO NOTHING`, [playerId])
+      await pool.query(`INSERT INTO player_visits (player_id, session_id, user_agent) VALUES ($1, $2, $3) ON CONFLICT (session_id) DO NOTHING`, [playerId, sessionId, String(request.headers['user-agent'] || '').slice(0, 300)])
+      return respondJson(response, 204, null)
+    }
+    if (path === '/api/telemetry/event' && request.method === 'POST') {
+      if (!databaseReady || !pool) return respondJson(response, 204, null)
+      const value = await readBody(request)
+      const body = value && typeof value === 'object' ? value as Record<string, unknown> : {}
+      const { playerId, eventId, runId, eventType, stage, missionId, detail } = body
+      const validToken = (item: unknown, max = 100) => typeof item === 'string' && /^[a-zA-Z0-9:_-]+$/.test(item) && item.length <= max
+      const validStages = new Set(['called', 'field', 'map', 'board', 'tactical', 'response', 'diagnosis', 'result'])
+      const validTypes = new Set(['stage', 'hint', 'tactical', 'diagnosis', 'exit'])
+      if (!validPlayerId(playerId) || !validToken(eventId) || !validToken(runId) || !validTypes.has(String(eventType)) || !Number.isInteger(missionId) || Number(missionId) < 1 || Number(missionId) > 99 || (stage !== '' && !validStages.has(String(stage)))) return respondJson(response, 400, { error: 'Evento inválido.' })
+      const safeDetail = detail && typeof detail === 'object' && JSON.stringify(detail).length <= 1000 ? detail : {}
+      await pool.query('INSERT INTO game_profiles (player_id) VALUES ($1) ON CONFLICT (player_id) DO NOTHING', [playerId])
+      await pool.query(`INSERT INTO mission_events (event_id, run_id, player_id, mission_id, event_type, stage, detail) VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb) ON CONFLICT (event_id) DO NOTHING`, [eventId, runId, playerId, missionId, eventType, stage || '', JSON.stringify(safeDetail)])
+      return respondJson(response, 204, null)
+    }
+    if (path === '/api/admin/google' && request.method === 'POST') {
+      if (!adminEnabled || !googleClient) return respondJson(response, 404, { error: 'Painel administrativo não configurado.' })
+      const value = await readBody(request)
+      const credential = value && typeof value === 'object' ? (value as { credential?: unknown }).credential : null
+      if (typeof credential !== 'string' || credential.length > 5000) return respondJson(response, 400, { error: 'Credencial inválida.' })
+      const ticket = await googleClient.verifyIdToken({ idToken: credential, audience: googleClientId })
+      const payload = ticket.getPayload()
+      const email = payload?.email?.toLowerCase()
+      if (!email || !payload?.email_verified || !adminEmails.has(email)) return respondJson(response, 403, { error: 'Esta conta não possui acesso administrativo.' })
+      const expires = Date.now() + 8 * 60 * 60 * 1000
+      const token = signAdminSession(email, expires)
+      const secure = request.headers['x-forwarded-proto'] === 'https' || process.env.NODE_ENV === 'production' ? '; Secure' : ''
+      response.setHeader('Set-Cookie', `missao_admin=${encodeURIComponent(token)}; HttpOnly${secure}; SameSite=Strict; Path=/; Max-Age=28800`)
+      return respondJson(response, 200, { ok: true })
+    }
+    if (path === '/api/admin/session' && request.method === 'GET') return respondJson(response, 200, { authenticated: Boolean(readAdminSession(request)) })
+    if (path === '/api/admin/stats' && request.method === 'GET') {
+      const admin = readAdminSession(request)
+      if (!admin || !databaseReady || !pool) return respondJson(response, 401, { error: 'Acesso administrativo necessário.' })
+      const [overview, players, missions, funnel] = await Promise.all([
+        pool.query(`SELECT
+          (SELECT COUNT(*)::int FROM player_visits) AS visits,
+          (SELECT COUNT(*)::int FROM player_visits WHERE visited_at > NOW() - INTERVAL '24 hours') AS visits_24h,
+          (SELECT COUNT(DISTINCT player_id)::int FROM player_visits WHERE visited_at > NOW() - INTERVAL '30 days') AS active_30d,
+          (SELECT COUNT(*)::int FROM game_profiles) AS players,
+          (SELECT COUNT(*)::int FROM auth_identities WHERE provider = 'google') AS google_links,
+          (SELECT COUNT(*)::int FROM game_runs) AS runs`),
+        pool.query(`SELECT p.display_name AS "displayName", a.email, p.xp, p.coins, p.plays, p.best_score AS "bestScore", jsonb_array_length(p.completed) AS completed, p.created_at AS "createdAt", p.last_played_at AS "lastPlayedAt", p.last_mission_id AS "lastMissionId", COUNT(v.id)::int AS visits
+          FROM game_profiles p LEFT JOIN auth_identities a ON a.player_id = p.player_id AND a.provider = 'google' LEFT JOIN player_visits v ON v.player_id = p.player_id
+          GROUP BY p.player_id, a.email ORDER BY p.last_played_at DESC NULLS LAST, p.created_at DESC LIMIT 200`),
+        pool.query(`SELECT mission_id AS "missionId", COUNT(*)::int AS runs, COUNT(*) FILTER (WHERE outcome = 'won')::int AS wins, ROUND(AVG(score))::int AS "averageScore" FROM game_runs GROUP BY mission_id ORDER BY mission_id`),
+        pool.query(`SELECT mission_id AS "missionId",
+          COUNT(DISTINCT run_id) FILTER (WHERE event_type = 'stage' AND stage = 'called')::int AS starts,
+          COUNT(DISTINCT run_id) FILTER (WHERE event_type = 'stage' AND stage = 'result')::int AS finishes,
+          COUNT(DISTINCT run_id) FILTER (WHERE event_type = 'hint')::int AS "hintRuns",
+          COUNT(DISTINCT run_id) FILTER (WHERE event_type = 'tactical')::int AS "tacticalRuns",
+          COUNT(DISTINCT run_id) FILTER (WHERE event_type = 'diagnosis')::int AS "diagnosisRuns"
+          FROM mission_events GROUP BY mission_id ORDER BY mission_id`),
+      ])
+      return respondJson(response, 200, { admin, overview: overview.rows[0], players: players.rows, missions: missions.rows, funnel: funnel.rows })
+    }
     const authStatusMatch = path.match(/^\/api\/auth\/status\/([a-zA-Z0-9-]{16,80})$/)
     if (authStatusMatch && request.method === 'GET') {
       if (!databaseReady || !pool || !googleClient) return respondJson(response, 200, { googleLinked: false })
       const playerId = authStatusMatch[1]
       if (!validPlayerId(playerId)) return respondJson(response, 400, { error: 'Identidade de jogador inválida.' })
-      const linked = await pool.query('SELECT 1 FROM auth_identities WHERE provider = $1 AND player_id = $2 LIMIT 1', ['google', playerId])
-      return respondJson(response, 200, { googleLinked: Boolean(linked.rowCount) })
+      const linked = await pool.query('SELECT email FROM auth_identities WHERE provider = $1 AND player_id = $2 LIMIT 1', ['google', playerId])
+      return respondJson(response, 200, { googleLinked: Boolean(linked.rowCount), emailRecorded: Boolean(linked.rows[0]?.email) })
     }
     if (path === '/api/auth/google' && request.method === 'POST') {
       if (!databaseReady || !pool) return respondJson(response, 503, { error: 'A persistência precisa estar ativa para vincular uma conta.' })
@@ -177,20 +282,23 @@ createServer(async (request, response) => {
       const credential = value && typeof value === 'object' ? (value as { credential?: unknown }).credential : null
       const requestedPlayerId = value && typeof value === 'object' ? (value as { playerId?: unknown }).playerId : null
       const displayName = value && typeof value === 'object' ? (value as { displayName?: unknown }).displayName : ''
-      if (typeof credential !== 'string' || credential.length > 5000 || !validPlayerId(requestedPlayerId) || typeof displayName !== 'string') return respondJson(response, 400, { error: 'Dados de acesso inválidos.' })
+      const emailConsent = value && typeof value === 'object' ? (value as { emailConsent?: unknown }).emailConsent : false
+      if (typeof credential !== 'string' || credential.length > 5000 || !validPlayerId(requestedPlayerId) || typeof displayName !== 'string' || emailConsent !== true) return respondJson(response, 400, { error: 'Confirme o uso do e-mail para vincular a jornada.' })
       const normalizedName = displayName.trim().replace(/\s+/g, ' ')
       if (normalizedName.length > 60) return respondJson(response, 400, { error: 'Nome de exibição inválido.' })
       const ticket = await googleClient.verifyIdToken({ idToken: credential, audience: googleClientId })
-      const subject = ticket.getPayload()?.sub
-      if (!subject) return respondJson(response, 401, { error: 'Não foi possível confirmar a identidade Google.' })
+      const googlePayload = ticket.getPayload()
+      const subject = googlePayload?.sub
+      const email = googlePayload?.email?.toLowerCase()
+      if (!subject || !email || !googlePayload?.email_verified) return respondJson(response, 401, { error: 'Não foi possível confirmar a identidade Google.' })
       const existing = await pool.query('SELECT player_id FROM auth_identities WHERE provider = $1 AND provider_subject = $2', ['google', subject])
       const playerId = existing.rowCount ? existing.rows[0].player_id as string : requestedPlayerId
       const currentLink = !existing.rowCount ? await pool.query('SELECT provider_subject FROM auth_identities WHERE provider = $1 AND player_id = $2', ['google', playerId]) : null
       if (currentLink?.rowCount && currentLink.rows[0].provider_subject !== subject) return respondJson(response, 409, { error: 'Esta jornada já está vinculada a outra conta Google. Use essa conta para entrar.' })
       await pool.query(`INSERT INTO game_profiles (player_id, display_name) VALUES ($1, $2)
         ON CONFLICT (player_id) DO UPDATE SET display_name = CASE WHEN game_profiles.display_name = '' AND EXCLUDED.display_name <> '' THEN EXCLUDED.display_name ELSE game_profiles.display_name END, updated_at = NOW()`, [playerId, normalizedName])
-      if (existing.rowCount) await pool.query('UPDATE auth_identities SET last_signed_in_at = NOW() WHERE provider = $1 AND provider_subject = $2', ['google', subject])
-      else await pool.query('INSERT INTO auth_identities (provider, provider_subject, player_id) VALUES ($1, $2, $3)', ['google', subject, playerId])
+      if (existing.rowCount) await pool.query('UPDATE auth_identities SET last_signed_in_at = NOW(), email = $3, email_consent_at = COALESCE(email_consent_at, NOW()) WHERE provider = $1 AND provider_subject = $2', ['google', subject, email])
+      else await pool.query('INSERT INTO auth_identities (provider, provider_subject, player_id, email, email_consent_at) VALUES ($1, $2, $3, $4, NOW())', ['google', subject, playerId, email])
       const profile = await pool.query('SELECT player_id AS "playerId", xp, coins, completed, daily_claimed AS "dailyClaimed", last_active_day AS "lastActiveDay", streak, best_score AS "bestScore", inventory, equipped_style AS "equippedStyle", display_name AS "displayName" FROM game_profiles WHERE player_id = $1', [playerId])
       return respondJson(response, 200, { profile: profile.rows[0], linked: !existing.rowCount })
     }

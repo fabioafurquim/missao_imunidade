@@ -2,24 +2,24 @@
 
 ## Uso deste documento
 
-Esta matriz transforma a planilha `doencas-jogo.xlsx` em uma fila revisável de novos dossiês. Ela não substitui protocolo clínico, decisão de saúde pública ou revisão por docente. Antes de publicar um caso, um revisor deve validar os sinais discriminativos, os diferenciais, a redação das medidas e a fonte oficial indicada.
+Esta matriz transforma a planilha `doencas-jogo.xlsx` em uma fila revisável de novos dossiês. Ela não substitui protocolo clínico ou decisão de saúde pública. A equipe decidiu testar os casos antes da revisão docente formal; por isso, este documento também registra os pontos que devem ser revistos e ajustados posteriormente.
 
 ## Estrutura inicial do capítulo
 
 | Dossiê proposto | Padrão que o estudante deve reconhecer | Interação característica | Fonte primária para revisão | Situação |
 | --- | --- | --- | --- | --- |
-| Rota Dourada — febre amarela | Febre, icterícia e contexto de exposição vetorial; distinguir de outras síndromes febris e hepatites | Escolher áreas para busca de não vacinados e comunicação de risco | [OMS — Febre amarela](https://www.who.int/news-room/fact-sheets/detail/yellow-fever) | Rascunho pedagógico; revisão pendente |
-| Vila Horizonte — coqueluche | Tosse paroxística persistente, contatos respiratórios e proteção de grupos vulneráveis | Reconstruir cronologia de contatos e proteger o cuidado de pessoas vulneráveis | [OMS — Pertussis](https://www.who.int/health-topics/pertussis) | Rascunho pedagógico; revisão pendente |
-| Corredor Andino — doença de Chagas | Exposição vetorial e janela clínica; evitar reduzir o caso a um único sinal | Posicionar busca ambiental, melhoria habitacional e investigação de vínculos | [OMS — Chagas](https://www.who.int/health-topics/chagas-disease) | Rascunho pedagógico; revisão pendente |
+| Rota Dourada — febre amarela | Febre, icterícia e contexto de exposição vetorial; distinguir de outras síndromes febris e hepatites | Escolher áreas para busca de não vacinados e comunicação de risco | [OMS — Febre amarela](https://www.who.int/news-room/fact-sheets/detail/yellow-fever) | Jogável; validação editorial posterior |
+| Vila Horizonte — coqueluche | Tosse paroxística persistente, contatos respiratórios e proteção de grupos vulneráveis | Reconstruir cronologia de contatos e proteger o cuidado de pessoas vulneráveis | [OMS — Pertussis](https://www.who.int/health-topics/pertussis) | Jogável; validação editorial posterior |
+| Corredor Andino — doença de Chagas | Exposição vetorial e janela clínica; evitar reduzir o caso a um único sinal | Posicionar busca ambiental, melhoria habitacional e investigação de vínculos | [OMS — Chagas](https://www.who.int/health-topics/chagas-disease) | Jogável; validação editorial posterior |
 
-## Critérios antes de liberar um dossiê
+## Critérios para manter e aprimorar um dossiê
 
 - A história humana não revela a resposta.
 - Pelo menos uma pista clínica, uma de exposição ou vigilância e uma limitação laboratorial sustentam o raciocínio.
 - Os diferenciais têm motivo pedagógico e não são alternativas absurdas.
 - A ação protetora e a ação de risco possuem consequência explicável.
 - A referência oficial abre e suporta a síntese usada no jogo.
-- Um docente aprova o conteúdo e registra a data da revisão.
+- Ajustes da equipe e uma futura revisão docente ficam registrados com data e responsável.
 
 ## Roteiro de teste com estudantes
 
@@ -54,4 +54,4 @@ Esta matriz transforma a planilha `doencas-jogo.xlsx` em uma fila revisável de 
 - **Diferenciais para revisão:** leishmaniose, malária, viroses febris e outras condições escolhidas conforme o roteiro final e o semestre.
 - **Base consultada:** a OMS descreve transmissão vetorial por triatomíneos, que costumam ocupar frestas de paredes e telhados e ter atividade noturna. A apresentação inicial pode ser inespecífica; sinais como lesão cutânea ou edema palpebral podem ajudar em casos novos. [OMS — Doença de Chagas](https://www.who.int/health-topics/chagas-disease)
 
-> Estes roteiros são material editorial. A descrição de medidas, sinais, diferenciais e avaliação deve receber validação docente documentada antes de se tornar uma missão iniciável.
+> Estes roteiros agora alimentam missões iniciáveis. Continuam sendo simulações educativas e podem receber correções de conteúdo, equilíbrio e linguagem após testes e revisão posterior.

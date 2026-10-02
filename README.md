@@ -73,7 +73,7 @@ A interface é mobile-first: no celular, o estado do ciclo fica fixo no topo, o 
 
 Recursos, resultados pendentes, score, decisões e desempenho por competências da partida em andamento ficam em `localStorage`. Com `DATABASE_URL`, a partida ativa também é espelhada no PostgreSQL e pode ser retomada em outro dispositivo usando a mesma identidade. XP, moedas, missões concluídas, missão diária e o histórico de encerramentos ficam no PostgreSQL quando a persistência está configurada. As opiniões de teste continuam somente em `localStorage`.
 
-O código `MISSAO-XXXX-XXXX-XXXX` continua sendo a identidade recuperável padrão. Opcionalmente, quando `GOOGLE_CLIENT_ID` estiver configurada, o jogador pode vincular essa mesma identidade a uma conta Google. O jogo guarda somente o identificador técnico retornado pelo Google e o nome de exibição escolhido pelo jogador; não armazena e-mail, senha, semestre ou eixo de estudo.
+O código `MISSAO-XXXX-XXXX-XXXX` continua sendo a identidade recuperável padrão. Opcionalmente, quando `GOOGLE_CLIENT_ID` estiver configurada, o jogador pode vincular essa mesma identidade a uma conta Google. Com autorização explícita na tela de vínculo, o servidor guarda o identificador técnico retornado pelo Google e o e-mail para identificação administrativa. Não armazena senha, foto, token, semestre ou eixo de estudo.
 
 O botão **Recordes** mostra dados agregados da central e rankings de melhor pontuação, XP e partidas iniciadas. O banco guarda um identificador técnico, o nome de exibição informado com aviso no perfil, melhor pontuação e contagem de partidas. E-mail, senha, semestre e foco de estudo não são enviados ao ranking.
 
@@ -89,6 +89,8 @@ O projeto possui um `Dockerfile` multiestágio. Em produção, um servidor Node 
 Para ativar persistência entre dispositivos, configure `DATABASE_URL` com a conexão PostgreSQL no Coolify. A aplicação cria a tabela `game_profiles` na primeira conexão. Sem essa variável, continua funcionando com o progresso local do navegador.
 
 Para habilitar o acesso opcional com Google, crie um cliente OAuth do tipo **Aplicação Web**, autorize `https://missaoimunidade.furquim.cloud` como origem JavaScript e defina `GOOGLE_CLIENT_ID` no Coolify. Não há `GOOGLE_CLIENT_SECRET` nesta integração: o token de identidade recebido no navegador é validado pela API antes de vincular a jornada. Sem `GOOGLE_CLIENT_ID`, nenhum botão Google é exibido.
+
+O painel administrativo é opcional e exige `ADMIN_EMAILS` (e-mails Google autorizados, separados por vírgula) e `ADMIN_SESSION_SECRET` (segredo aleatório com no mínimo 32 caracteres). O acesso inicial usa `?admin=1`; depois da autenticação autorizada, o menu Admin aparece na Central. O painel reúne visitas, atividade, progresso e os e-mails que aceitaram explicitamente o vínculo Google.
 
 ## Central de Evolução
 
@@ -134,10 +136,25 @@ Uma hipótese final frágil não reinicia automaticamente o episódio. O cenári
 
 ## Conteúdo em revisão
 
-O roteiro do Capítulo 2, a origem na planilha da equipe e os critérios de validação docente estão em [docs/referencias/matriz-capitulo-2-revisao.md](docs/referencias/matriz-capitulo-2-revisao.md). Rascunhos médicos não entram como dossiês jogáveis até receberem revisão docente e confirmação da fonte oficial.
+O roteiro do Capítulo 2, a origem na planilha da equipe e os pontos de revisão editorial estão em [docs/referencias/matriz-capitulo-2-revisao.md](docs/referencias/matriz-capitulo-2-revisao.md). Febre amarela, coqueluche, doença de Chagas, raiva, leptospirose e tétano integram a campanha como dossiês jogáveis apoiados pela planilha e por fontes oficiais; ajustes clínicos posteriores continuam previstos.
 
 ## Identidade de jogador e acompanhamento
 
 A identidade v2 substitui os identificadores antigos. No primeiro acesso após a atualização, o navegador solicita um novo perfil e gera um código no formato `MISSAO-XXXX-XXXX-XXXX`. O estudante guarda esse código e pode informá-lo em outro navegador para reunir XP, melhor pontuação, partidas e dossiês concluídos na mesma identidade.
 
 A primeira inicialização desta versão remove os Recordes anteriores uma única vez, por decisão de produto, e registra a migração em `game_schema_migrations`. A aplicação passa a registrar também data de criação, última partida e último dossiê. A rota de Recordes entrega uma lista de até 30 participantes para o painel expansível.
+
+
+### Funil de missões e assets
+
+A API registra eventos agregáveis de progressão em `mission_events` e cria a tabela automaticamente quando o PostgreSQL está disponível. O painel administrativo mostra início, conclusão, partidas em aberto, uso de dicas e chegada ao diagnóstico por missão. As imagens usadas pela interface foram convertidas para WebP para reduzir a transferência em celular; o servidor Node entrega esse formato com o tipo MIME correto.
+
+### Desafios interativos por rota
+
+As missões do Capítulo 2 apresentam, no mapa de exploração, um desafio opcional próprio da rota: priorização de cobertura territorial, rede de contatos, exposição, vigilância de animais, deslocamento após enchentes ou avaliação individual de ferimento. Cada resposta recebe explicação imediata e fica no Diário da Equipe/debriefing. Uma boa priorização rende um recurso adicional simulado; uma escolha frágil não bloqueia a investigação e vira um ponto de revisão. Essas interações são educacionais e não substituem protocolos clínicos.
+
+O mapa reage com cor e aviso curto ao resultado. No celular, cena e locais de investigação aparecem antes do desafio opcional, mantendo a ação principal disponível sem precisar resolver o desafio.
+
+Cada operação do Capítulo 2 tem duas aberturas operacionais sorteadas ao iniciar a partida. O desafio acompanha a abertura escolhida e fica estável ao retomar o jogo. No encerramento, uma revisão opcional mostra as três alternativas, a escolha do estudante e a explicação de cada caminho.
+
+A posição das três opções também é sorteada uma vez e salva com a partida, evitando que a primeira resposta seja sempre a melhor. Os cartões usam sinais visuais próprios de cada rota e continuam operáveis por toque ou teclado.
